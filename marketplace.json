@@ -1,0 +1,18 @@
+{
+  "name": "sevos-claude-code-marketplace",
+  "owner": {
+    "name": "Artur Roszczyk",
+    "email": "[email protected]"
+  },
+  "plugins": [
+    {
+      "name": "git",
+      "source": "./plugins/git",
+      "description": "Set of commands, skills, and agents to manage git projects",
+      "version": "1.0.0",
+      "author": {
+        "name": "Artur Roszczyk"
+      }
+    }
+  ]
+}
