@@ -8,7 +8,16 @@
     {
       "name": "git",
       "source": "./plugins/git",
-      "description": "Set of commands, skills, and agents to manage git projects",
+      "description": "set of commands, skills, and agents to manage git projects",
+      "version": "1.0.0",
+      "author": {
+        "name": "artur roszczyk"
+      }
+    },
+    {
+      "name": "rails",
+      "source": "./plugins/rails",
+      "description": "Set of commands, skills, and agents to work on Ruby on Rails projects",
       "version": "1.0.0",
       "author": {
         "name": "Artur Roszczyk"
