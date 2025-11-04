@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Topic Name - Dashboard</title>
+
+    <!-- Mermaid.js -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
+
+    <!-- Syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            opacity: 0.9;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #555;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tab:hover {
+            background: #f0f0f0;
+            color: #667eea;
+        }
+
+        .tab.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .tab i {
+            font-size: 1rem;
+        }
+
+        /* Tab content */
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            animation: fadeIn 0.3s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Typography */
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #667eea;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            margin: 2rem 0 1rem;
+            color: #444;
+        }
+
+        h4 {
+            font-size: 1.1rem;
+            margin: 1.5rem 0 0.75rem;
+            color: #555;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        ul, ol {
+            margin: 1rem 0 1rem 2rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Code blocks */
+        pre {
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        code {
+            background: #f6f8fa;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+        }
+
+        /* Copy button for code */
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            padding: 0.25rem 0.5rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        pre:hover .copy-btn {
+            opacity: 1;
+        }
+
+        .copy-btn:hover {
+            background: #5568d3;
+        }
+
+        /* Mermaid diagrams */
+        .mermaid {
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        /* Info boxes */
+        .info-box {
+            background: #e6f3ff;
+            border-left: 4px solid #667eea;
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .info-box.warning {
+            background: #fff4e6;
+            border-left-color: #ff9800;
+        }
+
+        .info-box.tip {
+            background: #e6ffe6;
+            border-left-color: #4caf50;
+        }
+
+        .info-box.error {
+            background: #ffe6e6;
+            border-left-color: #f44336;
+        }
+
+        .info-box h4 {
+            margin-top: 0;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background: #f6f8fa;
+            font-weight: 600;
+            color: #555;
+        }
+
+        tr:hover {
+            background: #f9f9f9;
+        }
+
+        /* Cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .card {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.2s;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .card h4 {
+            margin-top: 0;
+            color: #667eea;
+        }
+
+        /* Endpoint display */
+        .endpoint {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .method {
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .method.get { background: #e6ffe6; color: #2e7d32; }
+        .method.post { background: #e6f3ff; color: #1565c0; }
+        .method.put { background: #fff4e6; color: #ef6c00; }
+        .method.delete { background: #ffe6e6; color: #c62828; }
+
+        .endpoint-path {
+            font-family: 'Monaco', monospace;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                width: 100%;
+            }
+
+            .tab-content {
+                padding: 1.5rem;
+            }
+
+            header h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+            }
+
+            header {
+                background: none;
+                color: #333;
+            }
+
+            .tabs {
+                display: none;
+            }
+
+            .tab-content {
+                display: block !important;
+                box-shadow: none;
+                page-break-inside: avoid;
+                margin-bottom: 2rem;
+            }
+
+            .copy-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>API Documentation</h1>
+        <p>Complete reference for the REST API</p>
+    </header>
+
+    <div class="container">
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" data-tab="overview">
+                <i class="fas fa-home"></i> Overview
+            </button>
+            <button class="tab" data-tab="users">
+                <i class="fas fa-users"></i> Users
+            </button>
+            <button class="tab" data-tab="products">
+                <i class="fas fa-box"></i> Products
+            </button>
+            <button class="tab" data-tab="orders">
+                <i class="fas fa-shopping-cart"></i> Orders
+            </button>
+            <button class="tab" data-tab="auth">
+                <i class="fas fa-lock"></i> Authentication
+            </button>
+        </div>
+
+        <!-- Overview Tab -->
+        <div class="tab-content active" id="overview">
+            <h2>API Overview</h2>
+            <p>
+                Welcome to the API documentation. This API provides comprehensive access to all features.
+            </p>
+
+            <h3>Architecture</h3>
+            <div class="mermaid">
+graph LR
+    A[Client] -->|HTTPS| B[API Gateway]
+    B --> C[Auth Service]
+    B --> D[User Service]
+    B --> E[Product Service]
+    B --> F[Order Service]
+    D --> G[(Database)]
+    E --> G
+    F --> G
+
+    style A fill:#FFE6E6
+    style B fill:#E6F3FF
+    style C fill:#E6FFE6
+    style D fill:#E6FFE6
+    style E fill:#E6FFE6
+    style F fill:#E6FFE6
+    style G fill:#FFF4E6
+            </div>
+
+            <h3>Quick Start</h3>
+            <div class="card-grid">
+                <div class="card">
+                    <h4>1. Get API Key</h4>
+                    <p>Sign up and generate your API key from the dashboard.</p>
+                </div>
+                <div class="card">
+                    <h4>2. Make Request</h4>
+                    <p>Include your API key in the Authorization header.</p>
+                </div>
+                <div class="card">
+                    <h4>3. Handle Response</h4>
+                    <p>Parse JSON responses and handle errors appropriately.</p>
+                </div>
+            </div>
+
+            <h3>Base URL</h3>
+            <pre><code>https://api.example.com/v1</code></pre>
+
+            <div class="info-box">
+                <h4>Rate Limits</h4>
+                <p>All endpoints are rate-limited to 100 requests per minute per API key.</p>
+            </div>
+        </div>
+
+        <!-- Users Tab -->
+        <div class="tab-content" id="users">
+            <h2>Users API</h2>
+            <p>Manage user accounts and profiles.</p>
+
+            <!-- List Users -->
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/users</span>
+                </div>
+                <p><strong>Description:</strong> Retrieve a list of users.</p>
+
+                <h4>Query Parameters</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>page</code></td>
+                            <td>integer</td>
+                            <td>No</td>
+                            <td>Page number (default: 1)</td>
+                        </tr>
+                        <tr>
+                            <td><code>limit</code></td>
+                            <td>integer</td>
+                            <td>No</td>
+                            <td>Items per page (default: 20)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>Example Request</h4>
+                <pre><code class="language-bash">curl -X GET "https://api.example.com/v1/users?page=1&limit=20" \
+  -H "Authorization: Bearer YOUR_API_KEY"</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+                <h4>Example Response</h4>
+                <pre><code class="language-json">{
+  "data": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "email": "john@example.com",
+      "created_at": "2024-01-01T00:00:00Z"
+    }
+  ],
+  "meta": {
+    "page": 1,
+    "total": 100
+  }
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+            </div>
+
+            <!-- Create User -->
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="endpoint-path">/users</span>
+                </div>
+                <p><strong>Description:</strong> Create a new user.</p>
+
+                <h4>Request Body</h4>
+                <pre><code class="language-json">{
+  "name": "Jane Doe",
+  "email": "jane@example.com",
+  "password": "securepassword123"
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+                <div class="info-box tip">
+                    <h4>Validation Rules</h4>
+                    <ul>
+                        <li>Email must be unique</li>
+                        <li>Password must be at least 8 characters</li>
+                        <li>Name is required</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Tab -->
+        <div class="tab-content" id="products">
+            <h2>Products API</h2>
+            <p>Manage product catalog.</p>
+
+            <h3>Product Schema</h3>
+            <div class="mermaid">
+erDiagram
+    PRODUCT {
+        int id PK
+        string name
+        string description
+        decimal price
+        int category_id FK
+        datetime created_at
+    }
+    CATEGORY {
+        int id PK
+        string name
+    }
+    PRODUCT }o--|| CATEGORY : belongs_to
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/products</span>
+                </div>
+                <p><strong>Description:</strong> List all products with filtering.</p>
+            </div>
+        </div>
+
+        <!-- Orders Tab -->
+        <div class="tab-content" id="orders">
+            <h2>Orders API</h2>
+            <p>Process and track orders.</p>
+
+            <h3>Order Lifecycle</h3>
+            <div class="mermaid">
+stateDiagram-v2
+    [*] --> Pending
+    Pending --> Processing : payment confirmed
+    Processing --> Shipped : items dispatched
+    Shipped --> Delivered : received
+    Pending --> Cancelled : cancelled
+    Processing --> Cancelled : cancelled
+    Delivered --> [*]
+    Cancelled --> [*]
+            </div>
+        </div>
+
+        <!-- Auth Tab -->
+        <div class="tab-content" id="auth">
+            <h2>Authentication</h2>
+            <p>Secure your API requests with token-based authentication.</p>
+
+            <h3>Authentication Flow</h3>
+            <div class="mermaid">
+sequenceDiagram
+    participant Client
+    participant API
+    participant Auth
+
+    Client->>API: POST /auth/login
+    API->>Auth: Validate credentials
+    Auth-->>API: Generate token
+    API-->>Client: Return JWT token
+    Client->>API: Request with token
+    API->>Auth: Verify token
+    Auth-->>API: Token valid
+    API-->>Client: Protected resource
+            </div>
+
+            <h3>Obtaining a Token</h3>
+            <pre><code class="language-bash">curl -X POST "https://api.example.com/v1/auth/login" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "password": "yourpassword"
+  }'</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+            <div class="info-box warning">
+                <h4>Security Best Practices</h4>
+                <ul>
+                    <li>Never share your API key</li>
+                    <li>Use HTTPS for all requests</li>
+                    <li>Rotate tokens regularly</li>
+                    <li>Store tokens securely</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Mermaid with pastel theme
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                primaryColor: '#FFE6E6',
+                primaryTextColor: '#333',
+                primaryBorderColor: '#999',
+                lineColor: '#666',
+                secondaryColor: '#E6F3FF',
+                tertiaryColor: '#E6FFE6',
+                quaternaryColor: '#FFF4E6',
+                quinaryColor: '#F0E6FF',
+                fontFamily: 'Inter, sans-serif'
+            }
+        });
+
+        // Initialize syntax highlighting
+        hljs.highlightAll();
+
+        // Tab switching
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetTab = tab.dataset.tab;
+
+                // Remove active class from all tabs and contents
+                tabs.forEach(t => t.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+
+                // Add active class to clicked tab and corresponding content
+                tab.classList.add('active');
+                document.getElementById(targetTab).classList.add('active');
+
+                // Re-render Mermaid diagrams
+                mermaid.init(undefined, document.querySelectorAll('.mermaid'));
+            });
+        });
+
+        // Copy to clipboard
+        function copyCode(button) {
+            const pre = button.parentElement;
+            const code = pre.querySelector('code');
+            const text = code.textContent;
+
+            navigator.clipboard.writeText(text).then(() => {
+                button.textContent = 'Copied!';
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

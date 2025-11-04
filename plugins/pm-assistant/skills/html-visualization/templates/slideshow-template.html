@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Topic Name - Presentation</title>
+
+    <!-- Reveal.js -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/theme/white.css">
+
+    <!-- Mermaid.js -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
+
+    <!-- Syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        .reveal {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .reveal h1 {
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .reveal h2 {
+            font-weight: 600;
+            color: #764ba2;
+        }
+
+        .reveal h3 {
+            font-weight: 500;
+            color: #555;
+        }
+
+        .reveal .slides {
+            text-align: left;
+        }
+
+        .reveal .title-slide {
+            text-align: center;
+        }
+
+        .reveal code {
+            background: #f6f8fa;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: 'Monaco', 'Courier New', monospace;
+        }
+
+        .reveal pre {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            border-radius: 8px;
+        }
+
+        .reveal pre code {
+            background: #f6f8fa;
+            padding: 1rem;
+            max-height: 500px;
+        }
+
+        .reveal .mermaid {
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .reveal .info-box {
+            background: #e6f3ff;
+            border-left: 4px solid #667eea;
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        .reveal .info-box.warning {
+            background: #fff4e6;
+            border-left-color: #ff9800;
+        }
+
+        .reveal .info-box.tip {
+            background: #e6ffe6;
+            border-left-color: #4caf50;
+        }
+
+        .reveal .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .reveal ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .reveal ul li:before {
+            content: "▸ ";
+            color: #667eea;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        .reveal .footer {
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            font-size: 0.6em;
+            color: #999;
+        }
+
+        /* Progress bar color */
+        .reveal .progress {
+            background: rgba(102, 126, 234, 0.2);
+            height: 3px;
+        }
+
+        .reveal .progress span {
+            background: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <!-- Slide 1: Title -->
+            <section class="title-slide">
+                <h1>Topic Name</h1>
+                <h3>Subtitle or Brief Description</h3>
+                <p style="margin-top: 2rem; color: #666;">Presenter Name | Date</p>
+            </section>
+
+            <!-- Slide 2: Overview -->
+            <section>
+                <h2>Overview</h2>
+                <ul>
+                    <li>Key concept 1</li>
+                    <li>Key concept 2</li>
+                    <li>Key concept 3</li>
+                    <li>What you'll learn today</li>
+                </ul>
+            </section>
+
+            <!-- Slide 3: Architecture -->
+            <section>
+                <h2>Architecture Overview</h2>
+                <div class="mermaid">
+graph LR
+    A[Component A] -->|data| B[Component B]
+    B -->|process| C[Component C]
+    C -->|result| D[Component D]
+
+    style A fill:#FFE6E6
+    style B fill:#E6F3FF
+    style C fill:#E6FFE6
+    style D fill:#FFF4E6
+                </div>
+                <p style="font-size: 0.9em; margin-top: 1rem;">
+                    Brief explanation of the architecture...
+                </p>
+            </section>
+
+            <!-- Slide 4: Two Column Layout -->
+            <section>
+                <h2>Concept Explanation</h2>
+                <div class="two-column">
+                    <div>
+                        <h3>What it is</h3>
+                        <ul>
+                            <li>Point 1</li>
+                            <li>Point 2</li>
+                            <li>Point 3</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Why it matters</h3>
+                        <ul>
+                            <li>Benefit 1</li>
+                            <li>Benefit 2</li>
+                            <li>Benefit 3</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 5: Code Example -->
+            <section>
+                <h2>Code Example</h2>
+                <pre><code class="language-javascript">// Basic implementation
+function example(data) {
+    // Validate input
+    if (!data) {
+        throw new Error('Data required');
+    }
+
+    // Process
+    const result = data.map(item => {
+        return transform(item);
+    });
+
+    return result;
+}
+</code></pre>
+                <div class="info-box tip" style="font-size: 0.8em;">
+                    <strong>Tip:</strong> Always validate input before processing
+                </div>
+            </section>
+
+            <!-- Slide 6: Sequence Diagram -->
+            <section>
+                <h2>Request Flow</h2>
+                <div class="mermaid">
+sequenceDiagram
+    participant User
+    participant Frontend
+    participant API
+    participant DB
+
+    User->>Frontend: Action
+    Frontend->>API: Request
+    API->>DB: Query
+    DB-->>API: Data
+    API-->>Frontend: Response
+    Frontend-->>User: Display
+                </div>
+            </section>
+
+            <!-- Slide 7: Vertical Slides (nested) -->
+            <section>
+                <section>
+                    <h2>Advanced Topics</h2>
+                    <p>Press <strong>↓</strong> to explore subtopics</p>
+                    <ul>
+                        <li>Topic 1</li>
+                        <li>Topic 2</li>
+                        <li>Topic 3</li>
+                    </ul>
+                </section>
+                <section>
+                    <h3>Topic 1: Details</h3>
+                    <p>Deep dive into the first topic...</p>
+                    <pre><code class="language-javascript">// Example for topic 1
+const topic1 = new Feature();
+</code></pre>
+                </section>
+                <section>
+                    <h3>Topic 2: Details</h3>
+                    <p>Deep dive into the second topic...</p>
+                </section>
+            </section>
+
+            <!-- Slide 8: Best Practices -->
+            <section>
+                <h2>Best Practices</h2>
+                <div class="info-box">
+                    <h3 style="margin-top: 0;">✅ Do</h3>
+                    <ul style="font-size: 0.9em;">
+                        <li>Follow established patterns</li>
+                        <li>Write clear, documented code</li>
+                        <li>Test thoroughly</li>
+                    </ul>
+                </div>
+                <div class="info-box warning">
+                    <h3 style="margin-top: 0;">❌ Don't</h3>
+                    <ul style="font-size: 0.9em;">
+                        <li>Skip validation</li>
+                        <li>Ignore error handling</li>
+                        <li>Hardcode values</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Slide 9: Summary -->
+            <section>
+                <h2>Summary</h2>
+                <ul>
+                    <li>We covered the core concepts</li>
+                    <li>Examined architecture and flow</li>
+                    <li>Reviewed code examples</li>
+                    <li>Discussed best practices</li>
+                </ul>
+                <div style="margin-top: 2rem; padding: 1rem; background: #f6f8fa; border-radius: 8px;">
+                    <strong>Key Takeaway:</strong> One sentence summary of the main point
+                </div>
+            </section>
+
+            <!-- Slide 10: Q&A -->
+            <section class="title-slide">
+                <h2>Questions?</h2>
+                <p style="margin-top: 2rem; font-size: 0.8em;">
+                    Contact: email@example.com<br>
+                    Docs: https://docs.example.com
+                </p>
+            </section>
+        </div>
+    </div>
+
+    <!-- Reveal.js -->
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reveal.js"></script>
+
+    <script>
+        // Initialize Mermaid with pastel theme
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                primaryColor: '#FFE6E6',
+                primaryTextColor: '#333',
+                primaryBorderColor: '#999',
+                lineColor: '#666',
+                secondaryColor: '#E6F3FF',
+                tertiaryColor: '#E6FFE6',
+                quaternaryColor: '#FFF4E6',
+                quinaryColor: '#F0E6FF',
+                fontFamily: 'Inter, sans-serif'
+            }
+        });
+
+        // Initialize syntax highlighting
+        hljs.highlightAll();
+
+        // Initialize Reveal.js
+        Reveal.initialize({
+            hash: true,
+            slideNumber: true,
+            transition: 'slide',
+            backgroundTransition: 'fade',
+            progress: true,
+            controls: true,
+            keyboard: true,
+            overview: true,
+            center: false,
+            touch: true,
+            loop: false,
+            rtl: false,
+            fragments: true,
+            help: true,
+            showNotes: false,
+            autoPlayMedia: null,
+            preloadIframes: null,
+            mouseWheel: false,
+            hideInactiveCursor: true,
+            hideCursorTime: 5000,
+            width: 1280,
+            height: 720,
+            margin: 0.04,
+            minScale: 0.2,
+            maxScale: 2.0
+        });
+
+        // Re-render Mermaid diagrams when slides change
+        Reveal.on('slidechanged', () => {
+            mermaid.init(undefined, document.querySelectorAll('.mermaid'));
+        });
+    </script>
+</body>
+</html>
