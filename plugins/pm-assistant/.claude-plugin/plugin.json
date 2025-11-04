@@ -1,0 +1,9 @@
+{
+  "name": "pm-assistant",
+  "version": "1.0.0",
+  "description": "Product Owner assistance for ticket refinement, epic breakdown, dependency analysis, and backlog management",
+  "author": {
+    "name": "Artur Roszczyk",
+    "email": "[email protected]"
+  }
+}

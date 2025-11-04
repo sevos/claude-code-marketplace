@@ -22,6 +22,15 @@
       "author": {
         "name": "Artur Roszczyk"
       }
+    },
+    {
+      "name": "pm-assistant",
+      "source": "./plugins/pm-assistant",
+      "description": "Product Owner assistance for ticket refinement, epic breakdown, dependency analysis, and backlog management",
+      "version": "1.0.0",
+      "author": {
+        "name": "Artur Roszczyk"
+      }
     }
   ]
 }
