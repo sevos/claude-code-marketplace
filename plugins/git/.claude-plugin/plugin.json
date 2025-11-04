@@ -1,0 +1,9 @@
+{
+  "name": "git",
+  "version": "1.0.0",
+  "description": "Set of commands, skills, and agents to manage git projects",
+  "author": {
+    "name": "Artur Roszczyk",
+    "email": "[email protected]"
+  }
+}
