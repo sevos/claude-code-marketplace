@@ -2,7 +2,6 @@
 name: html-visualization
 description: Create interactive HTML visualizations for any concept - technical documentation, business processes, tutorials, architecture diagrams, or educational content. Supports multiple formats (long-page, slideshow, dashboard, infographic) with Mermaid diagrams, syntax highlighting, and responsive design. Use when user requests visual documentation, presentations, learning materials, or disposable HTML documents. Triggers include "create visualization", "HTML document", "presentation", "onboarding guide", "tutorial page", "explain with diagrams", or "interactive documentation".
 tools: Glob, Grep, Read, WebFetch, WebSearch, TodoWrite, mcp__context7__resolve-library-id, mcp__context7__get-library-docs
-model: sonnet
 color: purple
 ---
 
