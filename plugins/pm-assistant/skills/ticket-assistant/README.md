@@ -4,7 +4,7 @@ AI-powered Product Owner assistance for ticket management and refinement across 
 
 ## What It Does
 
-When you work with tickets in Linear, Jira, GitHub Issues, or other supported PM systems, this Skill automatically activates to help you:
+When you work with tickets in Linear, GitHub Issues, Local Markdown, or other supported PM systems, this Skill automatically activates to help you:
 
 - **Create tickets** — Draft well-structured tickets with acceptance criteria from conversations
 - **Analyze tickets** — Review for completeness, clarity, gaps, and dependencies
@@ -15,8 +15,10 @@ When you work with tickets in Linear, Jira, GitHub Issues, or other supported PM
 
 ## Supported PM Systems
 
-- **Linear** (fully supported)
-- Future systems (Jira, GitHub Issues, Azure Boards, etc.) via extensible connector framework
+- **Linear** — Full support via Linear MCP server
+- **GitHub Issues** — Full support via GitHub CLI (`gh`)
+- **Local Markdown** — File-based tickets in `docs/tickets/`
+- Future systems (Jira, Azure Boards, etc.) via extensible connector framework
 
 ## Setup
 
@@ -29,13 +31,23 @@ To install, use the marketplace installation command or manually install the plu
 ### 2. Configure Your PM System
 
 **For Linear**:
-Follow the [Linear MCP documentation](https://linear.app/docs/mcp) to set up the MCP server and authenticate with Linear.
+1. Follow the [Linear MCP documentation](https://linear.app/docs/mcp) to set up the MCP server
+2. Authenticate with Linear
+3. Add `CLAUDE.md` configuration (see step 3)
 
-**For other systems**:
-Follow the appropriate MCP or API documentation for your PM system (Jira, GitHub, etc.).
+**For GitHub Issues**:
+1. Install GitHub CLI: https://cli.github.com/ or `brew install gh`
+2. Authenticate: `gh auth login`
+3. Verify git remote: `git remote get-url origin` (must be a GitHub repository)
+4. Add `CLAUDE.md` configuration (see step 3)
 
-### 3. Add Project Context (Recommended)
-Create `CLAUDE.md` in your project root to establish default PM system and project context:
+**For Local Markdown**:
+1. Create tickets directory: `mkdir -p docs/tickets`
+2. Initialize counter: `echo "1" > docs/tickets/.ticket_counter`
+3. Add `CLAUDE.md` configuration (see step 3)
+
+### 3. Add Project Context (Required)
+Create `CLAUDE.md` in your project root to declare which PM system to use:
 
 **Example for Linear**:
 ```markdown
@@ -47,11 +59,29 @@ Create `CLAUDE.md` in your project root to establish default PM system and proje
 - **Project**: Backend Services
 ```
 
+**Example for GitHub Issues**:
+```markdown
+# CLAUDE.md
+
+## Project Management
+- **System**: GitHub-Issues
+```
+Note: Repository is auto-detected from git remote origin.
+
+**Example for Local Markdown**:
+```markdown
+# CLAUDE.md
+
+## Project Management
+- **System**: Local-Markdown
+- **Directory**: docs/tickets
+```
+
 The skill will use these settings for all operations in the project.
 
 ## How to Use
 
-Simply describe what you need with Linear tickets. The Skill activates automatically:
+Simply describe what you need with tickets. The Skill activates automatically and works with your configured PM system:
 
 ```
 Review the tickets for this sprint and identify any gaps
@@ -66,7 +96,7 @@ Suggest improvements to this epic based on the code review
 ```
 
 The Skill will:
-1. Fetch relevant tickets from Linear
+1. Fetch relevant tickets from your PM system (Linear, GitHub Issues, or Local Markdown)
 2. Analyze them using proven patterns
 3. Present findings or proposals for review
 4. **Wait for your explicit confirmation** before making changes
@@ -86,7 +116,7 @@ The Skill will:
 
 ## Key Principles
 
-✅ **Extensible architecture** — Linear-specific code isolated in connectors; ready for Jira, GitHub, etc. in future
+✅ **Extensible architecture** — PM system-specific code isolated in connectors; supports Linear, GitHub Issues, and Local Markdown
 ✅ **Always proposes before acting** — Shows changes for your review
 ✅ **Requires explicit confirmation** — Never assumes approval
 ✅ **Specific and quoted** — References exact text when identifying issues
@@ -98,8 +128,13 @@ The Skill will:
 | Problem | Solution |
 |---------|----------|
 | Skill not activating | Explicitly ask: "Use the ticket-assistant skill to review these tickets..." |
-| Team/project not found | Add a `CLAUDE.md` file with Linear team and project (see Setup step 3) |
-| Can't find tickets | Verify Linear is configured correctly in CLAUDE.md and MCP server is authenticated |
+| Team/project not found (Linear) | Add `CLAUDE.md` file with Linear team and project (see Setup step 3) |
+| Can't find tickets (Linear) | Verify Linear is configured correctly in CLAUDE.md and MCP server is authenticated |
+| Repository not detected (GitHub) | Verify git remote origin exists and is a GitHub URL: `git remote get-url origin` |
+| `gh` command not found (GitHub) | Install GitHub CLI: https://cli.github.com/ or `brew install gh` |
+| Not authenticated (GitHub) | Run `gh auth login` to authenticate with GitHub |
+| Tickets directory not found (Local Markdown) | Create directory specified in CLAUDE.md: `mkdir -p docs/tickets` |
+| System not declared | Add `CLAUDE.md` with `System` field set to Linear, GitHub-Issues, or Local-Markdown |
 
 ---
 

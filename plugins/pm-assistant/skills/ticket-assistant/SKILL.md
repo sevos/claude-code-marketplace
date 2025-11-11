@@ -1,6 +1,6 @@
 ---
 name: ticket-assistant
-description: Product Owner assistance for ticket refinement, epic breakdown, dependency analysis, and backlog management. Use this skill when shaping tickets, analyzing quality, identifying gaps, or generating refinement questions. For ticket data operations (get, list, create, update), the skill delegates to the ticket-assistant agent.
+description: Product Owner assistance for ticket refinement, epic breakdown, dependency analysis, and backlog management. Use this skill when shaping tickets, analyzing quality, identifying gaps, or generating refinement questions. For ticket data operations (get, list, create, update), the skill delegates to the ticket-assistant agent which supports Linear, Local Markdown, and GitHub Issues.
 ---
 
 # Ticket Assistant Skill
@@ -14,7 +14,7 @@ This skill enables Product Owner workflows focused on **ticket shaping, structur
 - Generate meaningful refinement session questions
 - Propose amendments based on conversation context
 
-**Ticket Data Operations**: All ticket access and manipulation (get, list, create, update) is delegated to the **ticket-assistant agent**, which handles Linear MCP and Local Markdown operations.
+**Ticket Data Operations**: All ticket access and manipulation (get, list, create, update) is delegated to the **ticket-assistant agent**, which handles Linear MCP, Local Markdown, and GitHub Issues operations.
 
 ## Architecture
 
@@ -23,9 +23,9 @@ User Request
      ↓
 ticket-assistant SKILL (shaping/best practices/analysis)
      ↓ (delegates data operations)
-ticket-assistant AGENT (Linear MCP / Local Markdown CRUD)
+ticket-assistant AGENT (Linear MCP / Local Markdown / GitHub CLI CRUD)
      ↓
-[Linear MCP] or [Markdown Files]
+[Linear MCP] or [Markdown Files] or [GitHub CLI]
 ```
 
 ## Core Capabilities
