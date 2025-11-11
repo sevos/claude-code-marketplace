@@ -1,74 +1,32 @@
 ---
 name: ticket-assistant
-description: Product Owner assistance for ticket refinement, epic breakdown, dependency analysis, and backlog management across multiple project management systems. Use this skill when working with tickets to create, analyze, propose amendments, or generate discussion questions. Supports Linear, Local Markdown, Jira, GitHub Issues, and other PM systems through extensible connectors.
+description: Product Owner assistance for ticket refinement, epic breakdown, dependency analysis, and backlog management. Use this skill when shaping tickets, analyzing quality, identifying gaps, or generating refinement questions. For ticket data operations (get, list, create, update), the skill delegates to the ticket-assistant agent.
 ---
 
 # Ticket Assistant Skill
 
 ## Overview
 
-This skill enables Product Owner workflows across multiple project management systems:
-- Create and refine tickets with proper structure and acceptance criteria
+This skill enables Product Owner workflows focused on **ticket shaping, structure, and best practices**:
+- Refine tickets with proper structure and acceptance criteria
 - Analyze tickets for gaps, clarity, completeness, and dependencies
 - Break down epics into actionable sub-tickets
 - Generate meaningful refinement session questions
 - Propose amendments based on conversation context
 
-The skill automatically detects which PM system the project uses (Linear, Local Markdown, Jira, GitHub, etc.) and applies the appropriate connector to query and mutate data. All analysis patterns and refinement workflows are system-agnostic and work consistently across platforms.
+**Ticket Data Operations**: All ticket access and manipulation (get, list, create, update) is delegated to the **ticket-assistant agent**, which handles Linear MCP and Local Markdown operations.
 
-## Getting Started: PM System Detection
+## Architecture
 
-Before starting any work, the skill automatically establishes the PM system context:
-
-### 1. PM System Detection
-
-The skill detects which PM system the project uses by:
-1. **Checking for MCP servers** - Is Linear, Jira, GitHub, or other PM connector available?
-2. **Checking CLAUDE.md** - Does the project declare a PM system explicitly?
-3. **Checking for docs/tickets directory** - Does Local Markdown tickets directory exist?
-4. **Using AskUserQuestion tool** - If detection is ambiguous (see "Using AskUserQuestion for User Input" section)
-
-### 2. PM System Configuration
-
-Configure the PM system in **CLAUDE.md** file in your project root:
-
-**Example for Linear**:
-```markdown
-# CLAUDE.md
-
-## Project Management
-- **System**: Linear
-- **Team Prefix**: PROD
-- **Project**: Backend Services
 ```
-
-**Example for Jira**:
-```markdown
-# CLAUDE.md
-
-## Project Management
-- **System**: Jira
-- **Instance**: https://company.atlassian.net
-- **Project**: BACKEND
+User Request
+     ↓
+ticket-assistant SKILL (shaping/best practices/analysis)
+     ↓ (delegates data operations)
+ticket-assistant AGENT (Linear MCP / Local Markdown CRUD)
+     ↓
+[Linear MCP] or [Markdown Files]
 ```
-
-**Example for Local Markdown**:
-```markdown
-# CLAUDE.md
-
-## Project Management
-- **System**: Local-Markdown
-- **Directory**: docs/tickets
-```
-
-### 3. Connector-Specific Discovery
-
-Once the PM system is detected, the skill loads the appropriate connector from `connectors/` (e.g., `connectors/linear.md`, `connectors/local-markdown.md`, `connectors/jira.md`). The connector handles:
-- Finding team/project context specific to that system
-- Discovering available workspaces, teams, or projects
-- Using AskUserQuestion tool if multiple options exist (see "Using AskUserQuestion for User Input" section)
-
-This ensures all operations are scoped to the correct workspace for the detected PM system.
 
 ## Core Capabilities
 
@@ -83,12 +41,11 @@ This ensures all operations are scoped to the correct workspace for the detected
 4. Apply appropriate type labels (Feature, Bug, Enhancement, etc.)
 5. Present proposal to user for review
 6. **Use AskUserQuestion tool for confirmation**: Wait for explicit approval before proceeding
-7. **After user confirms**: Create ticket using the loaded PM connector
+7. **After user confirms**: Delegate to ticket-assistant agent to create ticket
 8. Report created ticket with ID and link
 
 **Guidelines**:
 - Refer to `references/ticket_structure_guide.md` for formatting standards
-- Use `connectors/{system}.md` for PM system-specific API details
 - Include acceptance criteria for complex work
 - Flag open questions when scope is unclear
 - Suggest dependencies if work relates to existing tickets
@@ -98,7 +55,7 @@ This ensures all operations are scoped to the correct workspace for the detected
 **Scenario**: "Are there any wrong assumptions in the ticket?" or "Based on the conversation transcript suggest adjustments to epic XXX-123"
 
 **Process**:
-1. Fetch existing ticket/epic using the loaded PM connector
+1. Delegate to ticket-assistant agent to fetch existing ticket/epic
 2. Analyze current state (description, acceptance criteria, scope)
 3. Cross-reference with provided context (code, conversation, etc.)
 4. Use patterns from `references/analysis_patterns.md` to identify:
@@ -111,7 +68,7 @@ This ensures all operations are scoped to the correct workspace for the detected
    - "Suggested changes" (with rationale)
    - "Questions for team" (if needed)
 6. **Use AskUserQuestion tool for confirmation**: Wait for explicit approval before proceeding
-7. **After user confirms**: Update ticket using the loaded PM connector
+7. **After user confirms**: Delegate to ticket-assistant agent to update ticket
 8. Report changes applied
 
 **Guidelines**:
@@ -125,7 +82,7 @@ This ensures all operations are scoped to the correct workspace for the detected
 **Scenario**: "Review existing Linear tickets for completeness, clarity, dependencies, open questions" for range AIA-100 through AIA-110
 
 **Process**:
-1. Fetch all tickets in range using the loaded PM connector with appropriate filters
+1. Delegate to ticket-assistant agent to fetch tickets in range
 2. For each ticket, evaluate against criteria:
    - **Clarity**: Title, description, acceptance criteria
    - **Completeness**: All required fields, edge cases covered
@@ -153,21 +110,20 @@ This ensures all operations are scoped to the correct workspace for the detected
 **Scenario**: "Identify gaps in the planned tickets for epic XXX-123"
 
 **Process**:
-1. Fetch epic using the loaded PM connector
-2. Query subtickets using the connector's hierarchy query (e.g., filter `parent:"XXX-123"`)
-3. Analyze epic scope vs. ticket coverage using `references/analysis_patterns.md` Pattern 1:
+1. Delegate to ticket-assistant agent to fetch epic and sub-tickets
+2. Analyze epic scope vs. ticket coverage using `references/analysis_patterns.md` Pattern 1:
    - Frontend/UI components
    - Backend services and APIs
    - Testing and QA work
    - Documentation and knowledge base
    - Deployment or infrastructure
    - Edge cases and error scenarios
-4. Present findings:
+3. Present findings:
    - Identified gaps with context
    - Suggested new tickets for each gap
    - Estimated scope per gap
-5. **Use AskUserQuestion tool for confirmation**: Present options to create all tickets, select specific ones, or review proposals first
-6. **After user confirms**: Create tickets using the loaded PM connector
+4. **Use AskUserQuestion tool for confirmation**: Present options to create all tickets, select specific ones, or review proposals first
+5. **After user confirms**: Delegate to ticket-assistant agent to create tickets
 
 **Guidelines**:
 - Be thorough but realistic (not everything needs a separate ticket)
@@ -180,7 +136,7 @@ This ensures all operations are scoped to the correct workspace for the detected
 **Scenario**: User asks about dependencies between tickets or how to parallelize work
 
 **Process**:
-1. Fetch relevant tickets and analyze relationships
+1. Delegate to ticket-assistant agent to fetch relevant tickets
 2. Use `references/analysis_patterns.md` Pattern 3:
    - Extract explicit Blocks/Blocked-by relationships
    - Identify implicit dependencies
@@ -203,7 +159,7 @@ This ensures all operations are scoped to the correct workspace for the detected
 **Scenario**: "Generate questions for the next refinement session for tickets XXX-100 through XXX-110"
 
 **Process**:
-1. Fetch ticket range using the loaded PM connector with appropriate filters
+1. Delegate to ticket-assistant agent to fetch ticket range
 2. Analyze each ticket for uncertainty patterns:
    - Missing acceptance criteria
    - Ambiguous requirements
@@ -229,23 +185,23 @@ This ensures all operations are scoped to the correct workspace for the detected
 - Note interdependencies between questions
 - Suggest time-boxing for discussion
 
-## Analysis Patterns and Templates
+## Reference Materials
 
-### Reference Materials
+### Ticket Structure and Templates
+- **`references/ticket_structure_guide.md`** - Title guidelines, label categories, description formats, acceptance criteria best practices, refinement checklist, red flags
+- **`assets/ticket_template.md`** - Ready-to-use templates for simple/complex/bug/epic tickets
 
-**For ticket structure standards**:
-- `references/ticket_structure_guide.md` - Detailed standards, templates, red flags
-- `assets/ticket_template.md` - Practical templates for simple/complex/bug/epic tickets
+### Analysis Patterns
+- **`references/analysis_patterns.md`** - 6 structured reasoning patterns:
+  1. Identifying gaps in epic coverage
+  2. Detecting assumption mismatches
+  3. Dependency analysis and parallelization
+  4. Clarity and completeness review
+  5. Generating refinement session questions
+  6. Epic analysis and adjustment suggestions
 
-**For analysis workflows**:
-- `references/analysis_patterns.md` - Detailed patterns for gaps, assumptions, dependencies, clarity, refinement
-- `connectors/{system}.md` - PM system-specific tool reference:
-  - `connectors/linear.md` - Linear MCP API reference
-  - `connectors/local-markdown.md` - Local Markdown connector documentation
-    - `connectors/local-markdown/setup.md` - Setup instructions
-
-**For refinement sessions**:
-- `references/refinement_session_guide.md` - Question generation, facilitation, templates
+### Refinement Sessions
+- **`references/refinement_session_guide.md`** - Question generation strategies, facilitation tips, sample agendas, post-refinement checklist
 
 ### When to Use Each Analysis Pattern
 
@@ -264,8 +220,7 @@ All creation and amendment operations follow this pattern:
 
 ### Step 1: Gather Context
 - User provides requirements (conversation, transcript, existing ticket)
-- Establish team/project scope if not already known
-- Fetch existing data if modifying
+- If ticket data is needed, delegate to ticket-assistant agent
 
 ### Step 2: Analyze and Draft
 - Use appropriate patterns from `references/analysis_patterns.md`
@@ -285,9 +240,8 @@ All creation and amendment operations follow this pattern:
 - Re-present adjusted version and confirm again using AskUserQuestion
 
 ### Step 5: Apply Changes
-- Use the loaded PM connector to create/update
-- Call connector-specific create/update functions
-- Include team/project context in all operations (per connector requirements)
+- Delegate to ticket-assistant agent to create/update tickets
+- Agent handles all PM system-specific operations
 
 ### Step 6: Report Results
 - Confirm what was created/updated
@@ -295,14 +249,6 @@ All creation and amendment operations follow this pattern:
 - Ask: "What would you like to do next?"
 
 ## Best Practices
-
-### PM System and Project Scoping
-- **Always detect** the PM system (MCP server, CLAUDE.md, or use AskUserQuestion tool)
-- **Check CLAUDE.md** in project directory for explicit system configuration
-- **Load the correct connector** for the detected system
-- **Discover team/project context** using the connector's discovery functions
-- **Use AskUserQuestion tool** if multiple teams/projects found and context is ambiguous
-- **Filter all queries** to correct team and project per the connector's requirements
 
 ### Ticket Quality
 - Read `references/ticket_structure_guide.md` for quality standards
@@ -326,11 +272,10 @@ All creation and amendment operations follow this pattern:
 - Offer revision if user suggests changes
 - Re-present for approval after revisions (using AskUserQuestion again)
 
-### PM Connector Usage
-- Refer to `connectors/{system}.md` for complete tool reference for the detected system
-- Use filters appropriately (per the connector's query syntax)
-- Handle errors gracefully (following connector-specific error handling guidance)
-- Respect rate limits and batch operations when possible
+### Delegating to Agent
+- Use ticket-assistant agent for all data operations (get, list, create, update, search)
+- Agent handles PM system detection and operations
+- Focus skill logic on analysis, shaping, and best practices
 
 ## Using AskUserQuestion for User Input
 
@@ -339,44 +284,14 @@ When user input is required during workflow execution, use the **AskUserQuestion
 ### When to Use AskUserQuestion
 
 Use the tool for:
-1. **PM system/project detection** - When multiple teams or projects exist and context is ambiguous
-2. **Clarifying questions during analysis** - When requirements, scope, or context needs clarification
-3. **Confirmation before actions** - Before creating or updating tickets in the PM system
+1. **Clarifying questions during analysis** - When requirements, scope, or context needs clarification
+2. **Confirmation before actions** - Before creating or updating tickets in the PM system
 
 Do NOT use for:
 - Open-ended conversational follow-ups ("What would you like to do next?")
 - Refinement session questions (those are for human facilitators)
 
-### Example 1: PM System Detection (Multiple Teams Available)
-
-**Scenario**: Multiple Linear teams found, need to determine which one to use.
-
-```
-Use AskUserQuestion tool with:
-{
-  "questions": [{
-    "question": "Multiple Linear teams found in your workspace. Which team should I use for this project?",
-    "header": "Team Selection",
-    "multiSelect": false,
-    "options": [
-      {
-        "label": "PROD - Product Team",
-        "description": "Main product development team (15 active issues)"
-      },
-      {
-        "label": "ENG - Engineering Platform",
-        "description": "Infrastructure and platform team (8 active issues)"
-      },
-      {
-        "label": "DESIGN - Design System",
-        "description": "Design system and component library team (5 active issues)"
-      }
-    ]
-  }]
-}
-```
-
-### Example 2: Clarifying Requirements During Analysis
+### Example 1: Clarifying Requirements During Analysis
 
 **Scenario**: Analyzing a ticket but scope is ambiguous between two interpretations.
 
@@ -405,7 +320,7 @@ Use AskUserQuestion tool with:
 }
 ```
 
-### Example 3: Confirming Before Creating Tickets
+### Example 2: Confirming Before Creating Tickets
 
 **Scenario**: Identified 3 gaps in epic coverage, ready to create tickets.
 
@@ -443,9 +358,33 @@ Use AskUserQuestion tool with:
 - Use `multiSelect: true` only when choices are not mutually exclusive
 
 **Headers**:
-- Keep short (max 12 chars): "Team", "Scope", "Approach", "Confirm"
+- Keep short (max 12 chars): "Scope", "Approach", "Confirm", "Priority"
 - Describes the decision type
 
 **Options**:
 - Label: Concise choice (1-5 words)
 - Description: Explain implications or what happens if chosen
+
+## Directory Structure
+
+```
+plugins/pm-assistant/skills/ticket-assistant/
+├── SKILL.md                           # This file
+├── README.md                          # User-facing documentation
+├── assets/
+│   └── ticket_template.md             # Ticket templates
+├── references/                        # Domain knowledge
+│   ├── ticket_structure_guide.md      # Ticket quality standards
+│   ├── analysis_patterns.md           # Analysis methodologies
+│   └── refinement_session_guide.md    # Refinement facilitation
+└── connectors/                        # PM system reference (optional)
+    └── linear.md                      # Linear MCP quick reference (if needed)
+```
+
+## Notes
+
+- Maximum 500 words per ticket (concise content)
+- All timestamps use ISO 8601 format
+- Descriptions support Markdown formatting
+- Always delegate ticket data operations to ticket-assistant agent
+- Focus on analysis, shaping, and best practices in this skill
