@@ -54,23 +54,12 @@ Your tasks:
    - Use facts, avoid self-praise adjectives ("improved", "optimized", "enhanced")
    - Hard limit: 80 words total
    - Format: Always use heredoc for commit message
-   - Footer: Always append:
-     ```
-
-     🤖 Generated with [Claude Code](https://claude.com/claude-code)
-
-     Co-Authored-By: Claude <noreply@anthropic.com>
-     ```
 
    Examples:
    ```bash
    # Simple change
    git commit -m "$(cat <<'EOF'
    Add user authentication middleware
-
-   🤖 Generated with [Claude Code](https://claude.com/claude-code)
-
-   Co-Authored-By: Claude <noreply@anthropic.com>
    EOF
    )"
 
@@ -80,10 +69,6 @@ Your tasks:
 
    Extracted connection logic into separate module. Added retry mechanism
    for failed connections. Configured pool size based on environment variables.
-
-   🤖 Generated with [Claude Code](https://claude.com/claude-code)
-
-   Co-Authored-By: Claude <noreply@anthropic.com>
    EOF
    )"
    ```
@@ -109,10 +94,6 @@ Example output format:
 Created 1 commit:
 
 abc123d - Add user authentication middleware
-
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
-
-Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
 ## Error Handling

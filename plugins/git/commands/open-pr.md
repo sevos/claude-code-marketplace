@@ -64,23 +64,12 @@ If you detect multiple distinct tasks from conversation context, ask user using 
   - Only state intents if explicitly discussed during implementation
 - **Hard limit**: 80 words total
 - **Format**: Always use heredoc for commit message
-- **Footer**: Always append:
-  ```
-
-  🤖 Generated with [Claude Code](https://claude.com/claude-code)
-
-  Co-Authored-By: Claude <noreply@anthropic.com>
-  ```
 
 **Examples:**
 ```bash
 # Simple change
 git commit -m "$(cat <<'EOF'
 Add user authentication middleware
-
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
-
-Co-Authored-By: Claude <noreply@anthropic.com>
 EOF
 )"
 
@@ -90,10 +79,6 @@ Refactor database connection pooling
 
 Extracted connection logic into separate module. Added retry mechanism
 for failed connections. Configured pool size based on environment variables.
-
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
-
-Co-Authored-By: Claude <noreply@anthropic.com>
 EOF
 )"
 ```
@@ -124,11 +109,6 @@ Check if force-push is needed (`git status` shows diverged branch).
 - For multiple commits: List key changes made across commits
 - Avoid self-praise language, state facts only
 - **Hard limit**: 150 words
-- **Footer**: Always append:
-  ```
-
-  🤖 Generated with [Claude Code](https://claude.com/claude-code)
-  ```
 
 **PR Metadata:**
 - Auto-detect default branch (main/master) as base
@@ -139,8 +119,6 @@ Check if force-push is needed (`git status` shows diverged branch).
 ```bash
 gh pr create --title "PR title" --body "$(cat <<'EOF'
 PR description content here.
-
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
 EOF
 )" [--draft]
 ```
