@@ -32,7 +32,7 @@ tools: Glob, Read, Write, Edit, Bash, AskUserQuestion,
        mcp__linear__create_issue_label, mcp__linear__list_project_labels,
        mcp__linear__list_cycles, mcp__linear__list_comments,
        mcp__linear__create_comment, mcp__linear__get_user
-allowed-tools: Glob, Read, Write, Edit, Bash(git remote:*), Bash(git rev-parse:*), Bash(gh issue:*), Bash(gh label:*), Bash(gh api:*), Bash(mkdir:*), Bash(which:*), Bash(gh auth status:*), Bash(gh repo view:*), AskUserQuestion
+allowed-tools: Glob, Read, Write, Edit, Bash(git remote:*), Bash(git rev-parse:*), Bash(gh issue:*), Bash(gh issue create:*), Bash(gh label:*), Bash(gh api:*), Bash(mkdir:*), Bash(which:*), Bash(gh auth status:*), Bash(gh repo view:*), AskUserQuestion
 model: claude-haiku-4-5
 color: purple
 ---
