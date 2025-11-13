@@ -1,4 +1,4 @@
-# Claude Ticket Assistant Skill
+# Claude Product Manager Skill
 
 AI-powered Product Owner assistance for ticket management and refinement across multiple project management systems.
 
@@ -127,7 +127,7 @@ The Skill will:
 
 | Problem | Solution |
 |---------|----------|
-| Skill not activating | Explicitly ask: "Use the ticket-assistant skill to review these tickets..." |
+| Skill not activating | Explicitly ask: "Use the product-manager skill to review these tickets..." |
 | Team/project not found (Linear) | Add `CLAUDE.md` file with Linear team and project (see Setup step 3) |
 | Can't find tickets (Linear) | Verify Linear is configured correctly in CLAUDE.md and MCP server is authenticated |
 | Repository not detected (GitHub) | Verify git remote origin exists and is a GitHub URL: `git remote get-url origin` |

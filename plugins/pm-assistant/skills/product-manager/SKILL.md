@@ -1,9 +1,9 @@
 ---
-name: ticket-assistant
+name: product-manager
 description: Product Owner assistance for ticket refinement, epic breakdown, dependency analysis, and backlog management. Use this skill when shaping tickets, analyzing quality, identifying gaps, or generating refinement questions. For ticket data operations (get, list, create, update), the skill delegates to the ticket-assistant agent which supports Linear, Local Markdown, and GitHub Issues.
 ---
 
-# Ticket Assistant Skill
+# Product Manager Skill
 
 ## Overview
 
@@ -21,7 +21,7 @@ This skill enables Product Owner workflows focused on **ticket shaping, structur
 ```
 User Request
      ↓
-ticket-assistant SKILL (shaping/best practices/analysis)
+product-manager SKILL (shaping/best practices/analysis)
      ↓ (delegates data operations)
 ticket-assistant AGENT (Linear MCP / Local Markdown / GitHub CLI CRUD)
      ↓
