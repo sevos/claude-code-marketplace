@@ -12,14 +12,16 @@ You are executing the `/open-pr` command. Follow these steps precisely:
 Check current branch with `git branch --show-current`.
 
 **If on main or master branch:**
-1. Ask user for new branch name using AskUserQuestion:
-   - "You're on the main/master branch. What should the new branch be called?"
-   - Options:
-     - "Auto-generate from changes" - Claude creates descriptive branch name based on changes
-     - "Custom name" - User will provide branch name
-2. Create and checkout new branch:
-   - If auto-generate: analyze changes briefly to create branch name (format: `feature/descriptive-name` or `fix/descriptive-name`)
-   - If custom: wait for user input, then `git checkout -b <branch-name>`
+1. Analyze changes briefly to understand what was modified/added
+2. Generate 4 best-effort branch name suggestions based on changes:
+   - Use format: `feature/descriptive-name`, `fix/descriptive-name`, or `refactor/descriptive-name`
+   - Make names concise but descriptive (2-4 words max)
+   - Vary the suggestions to give different perspectives on the changes
+3. Ask user to choose branch name using AskUserQuestion:
+   - Question: "You're on the main/master branch. Choose a branch name:"
+   - Options: Present the 4 generated branch names as options
+   - Note: User can always select "Other" to provide custom branch name
+4. Create and checkout new branch: `git checkout -b <chosen-branch-name>`
 
 **If on any other branch:** Proceed to Step 1.
 
