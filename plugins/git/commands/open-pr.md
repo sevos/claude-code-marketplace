@@ -1,3 +1,9 @@
+---
+description: Create commits, push branch, and open a pull request on GitHub
+argument-hint: [draft]
+allowed-tools: Bash(git status:*), Bash(git diff:*), Bash(git add:*), Bash(git commit:*), Bash(git push:*), Bash(git branch:*), Bash(git checkout:*), Bash(gh pr create:*), Bash(xdg-open:*), AskUserQuestion
+---
+
 # Open Pull Request
 
 You are executing the `/open-pr` command. Follow these steps precisely:

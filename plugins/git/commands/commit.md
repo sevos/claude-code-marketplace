@@ -1,3 +1,9 @@
+---
+description: Create git commits for changes made during the current session
+allowed-tools: Bash(git status:*), Bash(git diff:*), Bash(git add:*), Bash(git commit:*), Task, AskUserQuestion
+model: haiku
+---
+
 # Commit Changes
 
 You are executing the `/commit` command. Follow these steps precisely:
