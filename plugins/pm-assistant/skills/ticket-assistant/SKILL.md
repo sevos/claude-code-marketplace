@@ -49,6 +49,12 @@ ticket-assistant AGENT (Linear MCP / Local Markdown / GitHub CLI CRUD)
 - Include acceptance criteria for complex work
 - Flag open questions when scope is unclear
 - Suggest dependencies if work relates to existing tickets
+- **Content focus**: Extract user needs and business value; avoid code snippets
+- **Include technical details when**:
+  - Explicitly instructed to include them
+  - Deviating from standard conventions or patterns
+  - Non-standard approach requires documentation
+  - Critical technical constraints that impact implementation
 
 ### 2. Propose Ticket Amendments
 

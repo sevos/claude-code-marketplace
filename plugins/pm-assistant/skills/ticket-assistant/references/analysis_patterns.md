@@ -35,6 +35,11 @@ Analysis tasks leverage LLM reasoning to:
      - Documentation or knowledge base gaps
      - Deployment or infrastructure work not covered
    - Look for edge cases or error scenarios
+   - **Content filtering**:
+     - Extract user needs and business value
+     - Translate code discussions to high-level requirements
+     - Exclude code snippets unless explicitly requested
+     - Include technical details when deviating from conventions
 
 4. **Present findings**:
    - List identified gaps with context

@@ -181,3 +181,84 @@ Title: [Capability] for [User/Team/Domain]
 - For complex logic, use Given-When-Then format
 - For simple features, checkboxes are fine
 - Avoid "code is clean" or vague criteria
+
+## Content Guidelines
+
+**Default: Product-Centric Focus**
+
+Tickets should prioritize user value and business outcomes:
+
+✅ **Good - Product-focused**:
+```
+Title: Enable users to export their data
+
+Context:
+Users need ability to download their data for backup and compliance purposes.
+This supports GDPR requirements and builds user trust.
+
+Requirements:
+- Export button accessible from user profile
+- Support CSV and JSON formats
+- Include all user data except internal system fields
+
+Acceptance Criteria:
+- [ ] User can initiate export from profile page
+- [ ] System generates file within 30 seconds
+- [ ] Downloaded file contains complete user data
+- [ ] Format selection (CSV/JSON) works correctly
+```
+
+❌ **Poor - Too implementation-heavy**:
+```
+Title: Add CSV export endpoint
+
+Context:
+Need to implement CSV export using fast-csv library.
+Code: const csv = require('fast-csv'); function exportData() { ... }
+
+Requirements:
+- Create /api/export endpoint
+- Use fast-csv for generation
+- Return response with proper headers
+```
+
+**Including Technical Details**
+
+Include technical specifics when:
+
+1. **Explicitly requested**:
+```
+User: "Create ticket for payment processing. Make sure to note we're using Stripe, not our usual PayPal."
+
+✅ Ticket includes:
+Technical Note: Use Stripe payment gateway (deviation from standard PayPal integration)
+due to better support for recurring subscriptions.
+```
+
+2. **Convention deviation**:
+```
+User: "We need to use Redis for this caching layer instead of Memcached"
+
+✅ Ticket includes:
+Technical Note: Implement caching with Redis (deviation from Memcached standard)
+to support pub/sub for real-time invalidation.
+```
+
+3. **Critical architectural constraint**:
+```
+✅ Ticket includes:
+Technical Constraint: Use event-driven architecture with message queue
+to support asynchronous processing and avoid blocking user requests.
+```
+
+**What NOT to include**:
+
+❌ Avoid:
+- Code snippets or function implementations
+- Specific variable names or method signatures
+- Sample code from conversations or documentation
+
+✅ Instead use:
+- Architectural patterns: "Use Observer pattern for notifications"
+- Technology choices: "Implement with WebSockets for bidirectional communication"
+- Design constraints: "Must support horizontal scaling"

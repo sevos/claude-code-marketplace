@@ -224,3 +224,73 @@ During review, flag these as needing refinement:
 - Open questions are flagged for resolution
 - No zombie tickets (unchanged for 6+ months)
 - Clear epic-to-ticket hierarchy
+
+## Technical Content Guidelines
+
+**Default: Product-Centric Focus**
+
+Tickets should focus on:
+- User needs and business value
+- Expected behavior and outcomes
+- High-level architectural approach (patterns, technology choices)
+- What needs to happen, not how it will be coded
+- **NO code snippets or implementation details**
+
+**Include Technical Details When:**
+
+1. **Explicitly instructed**: User says "include X" or "make sure to note Y"
+2. **Convention deviation**: Approach differs from team's standard patterns
+3. **Critical constraints**: Technical limitations that affect implementation
+4. **Non-standard technology**: Using different tools/libraries than usual
+
+**Examples:**
+
+**Default case:**
+```
+User request: "Create a ticket for user authentication"
+
+✅ Good ticket:
+Title: Implement user authentication
+Context: Users need secure authentication to protect their accounts
+Requirements:
+- Secure session management
+- Password reset capability
+- Multi-factor authentication support
+
+❌ Poor ticket (too implementation-heavy):
+Title: Add JWT authentication
+Context: Need to implement JWT with passport.js library
+Code: const jwt = require('jsonwebtoken')...
+```
+
+**Explicit instruction:**
+```
+User request: "Create a ticket for auth, note we're using OAuth2 not JWT"
+
+✅ Good ticket:
+Title: Implement OAuth2 authentication
+Context: Users need secure authentication to protect their accounts
+Technical Note: Use OAuth2 instead of standard JWT pattern due to third-party integration requirements
+```
+
+**Convention deviation:**
+```
+User request: "We need to use MongoDB for this feature because of the dynamic schema requirements"
+
+✅ Good ticket:
+Title: Implement user preferences storage
+Context: Users need ability to store custom preferences with flexible structure
+Technical Note: Use MongoDB for storage (deviation from PostgreSQL standard) due to schema flexibility requirements for custom fields
+```
+
+**When to exclude code:**
+
+❌ Don't include:
+- Actual code snippets: `function authenticate(user) { ... }`
+- Specific implementations: variable names, exact method signatures
+- Example code from discussions
+
+✅ Instead translate to:
+- Architectural guidance: "Use Factory pattern for user creation"
+- Technology choices: "Implement with WebSockets for real-time updates"
+- Design constraints: "Must be stateless to support horizontal scaling"
