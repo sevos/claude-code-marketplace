@@ -1,7 +1,7 @@
 ---
 description: Create git commits for changes made during the current session
 allowed-tools: Bash(git status:*), Bash(git diff:*), Bash(git add:*), Bash(git commit:*), Task, AskUserQuestion
-model: haiku
+model: claude-haiku-4-5
 ---
 
 # Commit Changes
@@ -24,7 +24,7 @@ Create a concise summary (2-4 sentences) of the session's work.
 
 ## Step 2: Delegate to Agent
 
-Launch a general-purpose agent with the Task tool using the haiku model for efficiency, providing:
+Launch a general-purpose agent with the Task tool using the claude-haiku-4-5 model for efficiency, providing:
 
 **Prompt structure:**
 ```
