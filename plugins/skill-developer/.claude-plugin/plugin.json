@@ -1,0 +1,9 @@
+{
+  "name": "skill-developer",
+  "version": "1.0.0",
+  "description": "Tools and guidance for creating effective Claude Code skills",
+  "author": {
+    "name": "Artur Roszczyk",
+    "email": "[email protected]"
+  }
+}

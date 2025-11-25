@@ -31,6 +31,15 @@
       "author": {
         "name": "Artur Roszczyk"
       }
+    },
+    {
+      "name": "skill-developer",
+      "source": "./plugins/skill-developer",
+      "description": "Tools and guidance for creating effective Claude Code skills",
+      "version": "1.0.0",
+      "author": {
+        "name": "Artur Roszczyk"
+      }
     }
   ]
 }
