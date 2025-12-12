@@ -450,3 +450,105 @@ export default class extends Controller {
              data-controller="frame"
              data-action="turbo:before-frame-render->frame#morphRender">
 ```
+
+## Advanced Patterns
+
+### Turbo Stream Morphing
+
+Use `method: :morph` for efficient DOM updates that preserve form state and focus:
+
+```erb
+<%# Replace with morphing to preserve user state %>
+<%= turbo_stream.replace(dom_id(@column), partial: "boards/show/column", method: :morph) %>
+```
+
+### Lazy Loading Pagination
+
+Pattern for infinite scroll with automatic page loading:
+
+```erb
+<%# Remove loading indicator and append next page %>
+<%= turbo_stream.remove "#{params[:target]}-load-page-#{@page.number}" %>
+<%= turbo_stream.append params[:target] do %>
+  <%= render partial: "cards/display/preview", collection: @page.records %>
+  <% unless @page.last? %>
+    <%= cards_next_page_link params[:target], page: @page %>
+  <% end %>
+<% end %>
+```
+
+### Multi-Channel Broadcasting
+
+Subscribe to multiple channels or account-wide broadcasts:
+
+```erb
+<%# Conditional channel subscription %>
+<% if filter.boards.any? %>
+  <% filter.boards.each do |board| %>
+    <%= turbo_stream_from board %>
+  <% end %>
+<% else %>
+  <%= turbo_stream_from [ Current.account, :all_boards ] %>
+<% end %>
+```
+
+### Nested Activity Channels
+
+Listen to both model updates and activity streams separately:
+
+```erb
+<%# Subscribe to card updates and its activity feed %>
+<%= turbo_stream_from @card %>
+<%= turbo_stream_from @card, :activity %>
+```
+
+### Frame Refresh with Morphing
+
+Auto-refresh frames using morphing to preserve state:
+
+```erb
+<%# Frame auto-refreshes with morph strategy %>
+<%= turbo_frame_tag "notifications", src: tray_notifications_path, refresh: "morph" %>
+```
+
+### Automatic Pagination with Intersection Observer
+
+Helper pattern for automatic pagination when scrolling:
+
+```erb
+<%# Pagination wrapper with intersection observer %>
+<%= with_automatic_pagination dom_id(@column, :cards), @page do %>
+  <%= render "boards/columns/list", cards: @page.records %>
+<% end %>
+```
+
+```javascript
+// Stimulus controller for intersection-based pagination
+export default class extends Controller {
+  static targets = ["paginationLink"]
+  static values = { paginateOnIntersection: { type: Boolean, default: false } }
+
+  connect() {
+    if (this.paginateOnIntersectionValue) {
+      this.observer = new IntersectionObserver(this.#intersect, {
+        rootMargin: "300px",
+        threshold: 1
+      })
+      this.observer.observe(this.paginationLinkTarget)
+    }
+  }
+
+  #intersect = ([entry]) => {
+    if (entry?.isIntersecting) {
+      this.#loadPaginationLink(entry.target)
+    }
+  }
+
+  #loadPaginationLink(link) {
+    const frame = document.createElement("turbo-frame")
+    frame.id = link.dataset.frame
+    frame.src = link.href
+    link.replaceWith(frame)
+  }
+}
+```

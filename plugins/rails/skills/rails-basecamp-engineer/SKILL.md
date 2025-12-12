@@ -1,6 +1,6 @@
 ---
 name: rails-basecamp-engineer
-description: This skill applies 37signals/Basecamp coding patterns for Ruby on Rails applications. Use when building new Rails features, refactoring existing code, implementing authentication/authorization, setting up multi-tenancy, writing tests, or working with Hotwire (Turbo + Stimulus). Triggers include "Rails feature", "implement authentication", "add authorization", "multi-tenant", "Hotwire", "Turbo Streams", "Stimulus controller", "write tests", or following Basecamp conventions.
+description: This skill provides expert guidance on implementing Ruby on Rails applications using 37signals (Basecamp/HEY) patterns and conventions. Use when building Rails features, implementing authentication, authorization, multi-tenancy, background jobs, or Hotwire/Turbo/Stimulus following 37signals patterns.
 ---
 
 # Rails Basecamp Engineer
