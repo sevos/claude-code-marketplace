@@ -1,7 +1,7 @@
 ---
 description: Create git commits for changes made during the current session
 allowed-tools: Bash(git status:*), Bash(git diff:*), Task, AskUserQuestion
-model: claude-haiku-4-5
+model: sonnet
 ---
 
 # Commit Changes
@@ -17,18 +17,38 @@ This command creates git commits for changes made during the current session. Qu
 **Extract session context:**
 - Analyze conversation history for tasks/features implemented
 - Note which files were mentioned or modified
-- Identify if multiple distinct tasks were worked on
+- Identify if multiple distinct tasks were worked on:
+  - Multiple distinct requests from the user during the session
+  - Sequential work items that could stand alone
+  - Work that would naturally be described with "and" in a summary
 
-**Run lightweight git commands:**
+**Run git commands:**
 ```bash
 git status --short
 git diff --stat
+git diff           # full diff for semantic analysis
 ```
 
 **Assess the changes:**
 - Count files with changes
-- Identify if there are distinct change groups (multiple features/fixes)
 - Check for unstaged/untracked files that weren't part of the session work
+
+**Multiple Work Detection:**
+
+Analyze the diff content for signals of distinct work items:
+
+*Strong signals (trigger Question 1):*
+- New file creation serves a different purpose than modifications to existing files
+- Changes could be naturally described with "and" in a commit message (e.g., "simplify X and add Y")
+- Modifications affect unrelated features/components within the same codebase
+- Documentation additions that document NEW functionality alongside that new functionality
+
+*Weak signals (consider but don't auto-trigger):*
+- Multiple files changed (common in single-purpose work)
+- Different file types (often related - e.g., component + test)
+- Different directories (could be same feature across layers)
+
+*Key test:* Could a reasonable developer argue these changes should be separate commits? If yes, ask.
 
 Create a concise summary (2-4 sentences) of the session's work for later use.
 
@@ -55,7 +75,7 @@ If "Let me review first" is selected: List the files and wait for user guidance.
 
 ## Step 3: Delegate to Agent
 
-Launch a general-purpose agent with the Task tool using claude-haiku-4-5 model.
+Launch a general-purpose agent with the Task tool using `model: "haiku"` parameter.
 
 **Include in the prompt:**
 1. Session context summary from Step 1
