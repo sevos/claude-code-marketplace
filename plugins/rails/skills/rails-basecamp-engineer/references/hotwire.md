@@ -1,9 +1,9 @@
 # Hotwire Patterns (Turbo + Stimulus)
 
-> **Stimulus Controller Catalog:** For comprehensive Stimulus controller examples, see the `stimulus/` subdirectory:
-> - `stimulus/utility-controllers.md` - copy-to-clipboard, hotkey, toggle-class, etc.
-> - `stimulus/form-controllers.md` - auto-submit, autoresize, local-save, etc.
-> - `stimulus/ui-controllers.md` - dialog, lightbox, navigable-list, etc.
+> **Stimulus Controller Catalog:** See `stimulus/index.md` for a decision table to find the right controller, or browse by category:
+> - `stimulus/utility-controllers.md` - copy-to-clipboard, hotkey, toggle-class, beacon
+> - `stimulus/form-controllers.md` - auto-submit, autoresize, local-save, character-counter
+> - `stimulus/ui-controllers.md` - dialog, lightbox, navigable-list, local-time
 > - `stimulus/interaction-controllers.md` - drag-and-drop, sortable, resize
 
 ## Turbo Frames

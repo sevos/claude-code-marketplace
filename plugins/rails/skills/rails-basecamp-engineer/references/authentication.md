@@ -5,6 +5,30 @@ This document covers the shared authentication architecture. For specific authen
 - `authentication/magic-link.md` - Passwordless magic link (recommended)
 - `authentication/password.md` - Traditional password authentication
 
+## Detecting Existing Authentication Method
+
+Before implementing authentication features, check what the project already uses:
+
+**Indicators of Magic Link auth:**
+- `MagicLink` model exists in `app/models/`
+- `magic_link` or `magic_links` routes in `routes.rb`
+- `MagicLinkMailer` exists in `app/mailers/`
+- `send_magic_link` method on Identity model
+- Email-based login without password fields
+
+**Indicators of Password auth:**
+- `has_secure_password` in Identity or User model
+- `password_digest` column in `identities` or `users` migration
+- Password reset routes/controllers (`password_resets`, `passwords`)
+- Password fields in login forms
+- `bcrypt` gem in Gemfile
+
+**If both present:** The app supports multiple authentication methods. Load both reference files.
+
+**If unknown:** Use Explore agent to search for `MagicLink`, `has_secure_password`, or session controllers.
+
+---
+
 ## Architecture Overview
 
 The authentication system separates global identity from account-specific users:

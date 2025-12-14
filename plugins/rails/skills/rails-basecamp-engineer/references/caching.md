@@ -1,5 +1,7 @@
 # Caching Patterns
 
+> **Related:** For `touch: true` association patterns, see `models.md`. For Solid Cache configuration, see `configuration.md`.
+
 ## HTTP Caching with ETags
 
 ### Global ETags in ApplicationController

@@ -1,5 +1,7 @@
 # Mailer Patterns
 
+> **Related:** For SMTP and email delivery configuration, see `configuration.md`.
+
 ## Philosophy
 
 Keep mailers minimal. The logic belongs in models.

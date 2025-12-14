@@ -20,6 +20,49 @@ This skill provides comprehensive guidance for building Ruby on Rails applicatio
 7. **Transaction safety** - Wrap critical operations in transactions
 8. **Event tracking** - Record significant actions for audit trails
 
+## Working with Existing Applications
+
+When working on an existing Rails application, detect which patterns are in use before loading reference files. If the current context doesn't reveal the approach, use an Explore agent to investigate.
+
+### Frontend/CSS Detection
+
+**Check for these indicators:**
+- `tailwind.config.js` or `@tailwind` directives → Load `frontend/daisyui.md`
+- `app/assets/stylesheets/_global.css` with `@layer` → Load `frontend/vanilla-css.md`
+- DaisyUI classes (`btn`, `card`, `modal`) in views → Load `frontend/daisyui.md`
+- OKLCH colors or CSS custom properties → Load `frontend/vanilla-css.md`
+
+**Explore if unknown:** Search for `tailwind.config.js`, `@layer`, or CSS file structure.
+
+### Multi-Tenancy Detection
+
+**Check for these indicators:**
+- `Current.account` or `account_id` scoping → Load `multi-tenancy/shared-database.md`
+- `activerecord-tenanted` gem or `Tenanted` module → Load `multi-tenancy/database-per-tenant.md`
+- URL path like `/account-slug/...` → Load `multi-tenancy/shared-database.md`
+- Subdomain routing (`tenant.app.com`) → Load `multi-tenancy/database-per-tenant.md`
+- No tenant scoping found → Load `multi-tenancy/index.md` for decision guide
+
+**Explore if unknown:** Search for `Current.account`, `tenant`, `account_id` in models/controllers.
+
+### Authentication Detection
+
+**Check for these indicators:**
+- `MagicLink` model or `magic_link` routes → Load `authentication/magic-link.md`
+- `has_secure_password` or `password_digest` → Load `authentication/password.md`
+- Both present → Load both files
+
+**Explore if unknown:** Search for `MagicLink`, `has_secure_password`, or session controllers.
+
+### Stimulus Controller Detection
+
+**When implementing frontend interactivity:**
+1. First check if similar controllers exist in `app/javascript/controllers/`
+2. If no existing pattern, load `stimulus/index.md` for decision table
+3. Load specific controller file based on need
+
+**Explore if unknown:** List files in `app/javascript/controllers/` to see existing patterns.
+
 ## Reference Files
 
 Load the appropriate reference when implementing specific patterns or domains:
@@ -34,23 +77,23 @@ Load the appropriate reference when implementing specific patterns or domains:
 
 ### Domain-Specific Patterns
 - `references/authentication.md` - Authentication overview and shared architecture
-  - `references/authentication/magic-link.md` - Passwordless magic link (primary 37signals pattern)
-  - `references/authentication/password.md` - Traditional password authentication
+  - `authentication/magic-link.md` - Passwordless magic link (primary 37signals pattern)
+  - `authentication/password.md` - Traditional password authentication
 - `references/authorization.md` - Role-based and resource-level access control
-- `references/multi-tenancy/` - Multi-tenancy approaches:
-  - `references/multi-tenancy/shared-database.md` - Shared DB with tenant_id filtering (Fizzy/Basecamp pattern)
-  - `references/multi-tenancy/database-per-tenant.md` - Separate DB per tenant (activerecord-tenanted)
+- `references/multi-tenancy/index.md` - Multi-tenancy decision guide
+  - `multi-tenancy/shared-database.md` - Shared DB with tenant_id filtering (Fizzy/Basecamp)
+  - `multi-tenancy/database-per-tenant.md` - Separate DB per tenant
 
 ### Frontend & Hotwire
 - `references/hotwire.md` - Turbo Frames, Turbo Streams overview
-- `references/stimulus/` - Stimulus controller catalog:
+- `references/stimulus/index.md` - Stimulus controller decision table
   - `stimulus/utility-controllers.md` - copy-to-clipboard, hotkey, toggle-class, beacon
-  - `stimulus/form-controllers.md` - auto-submit, autoresize, local-save, character-counter
-  - `stimulus/ui-controllers.md` - dialog, lightbox, navigable-list, fetch-on-visible
+  - `stimulus/form-controllers.md` - auto-submit, autoresize, local-save
+  - `stimulus/ui-controllers.md` - dialog, lightbox, navigable-list, local-time
   - `stimulus/interaction-controllers.md` - drag-and-drop, sortable, resize
-- `references/frontend/` - CSS approach alternatives:
+- `references/frontend/index.md` - CSS approach decision guide
   - `frontend/vanilla-css.md` - 37signals CSS (layers, OKLCH, design tokens)
-  - `frontend/daisyui.md` - DaisyUI/TailwindCSS alternative (uses Context7 for live docs)
+  - `frontend/daisyui.md` - DaisyUI/TailwindCSS (uses Context7 for live docs)
 
 ### Infrastructure
 - `references/background-jobs.md` - Solid Queue configuration, recurring jobs, account context
@@ -72,13 +115,12 @@ Load the appropriate reference when implementing specific patterns or domains:
 | Strong parameters, response formats | `controllers.md` |
 | Request-scoped context (Current.user, etc.) | `current-attributes.md` |
 | Routing with CRUD-everything | `routing.md` |
-| Adding user login/logout | `authentication.md` + subdirectory |
+| Adding user login/logout | Detect existing method → `authentication/*.md` |
 | Implementing permissions/roles | `authorization.md` |
-| Multi-account/tenant support | `multi-tenancy/shared-database.md` or `database-per-tenant.md` |
+| Multi-account/tenant support | Detect existing approach → `multi-tenancy/*.md` |
 | Real-time UI updates (Turbo) | `hotwire.md` |
-| Stimulus controllers | `stimulus/` subdirectory |
-| CSS styling (vanilla) | `frontend/vanilla-css.md` |
-| CSS styling (DaisyUI) | `frontend/daisyui.md` |
+| Stimulus controllers | `stimulus/index.md` (decision table) |
+| CSS styling | Detect existing approach → `frontend/*.md` |
 | Background processing | `background-jobs.md` |
 | HTTP caching, ETags | `caching.md` |
 | Sending emails | `mailers.md` |

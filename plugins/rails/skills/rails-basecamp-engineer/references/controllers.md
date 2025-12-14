@@ -1,5 +1,7 @@
 # Controller Patterns
 
+> **Related:** For Turbo Stream responses and real-time UI patterns, see `hotwire.md`. For authentication concerns, see `authentication/`.
+
 ## Directory Structure
 
 ```
