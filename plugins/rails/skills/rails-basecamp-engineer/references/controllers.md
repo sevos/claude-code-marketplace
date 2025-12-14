@@ -99,8 +99,196 @@ module CurrentRequest
       Current.request_id  = request.uuid
       Current.user_agent  = request.user_agent
       Current.ip_address  = request.ip
+      Current.referrer    = request.referrer
     end
   end
+end
+```
+
+Models and jobs can access request context via `Current` without parameter passing:
+
+```ruby
+class Signup
+  def create_identity
+    Identity.create!(
+      email_address: email_address,
+      ip_address: Current.ip_address,
+      user_agent: Current.user_agent
+    )
+  end
+end
+```
+
+### CurrentTimezone Concern
+
+User timezone from cookie with HTTP caching support:
+
+```ruby
+module CurrentTimezone
+  extend ActiveSupport::Concern
+
+  included do
+    around_action :set_current_timezone
+    helper_method :timezone_from_cookie
+    etag { timezone_from_cookie }
+  end
+
+  private
+    def set_current_timezone(&)
+      Time.use_zone(timezone_from_cookie, &)
+    end
+
+    def timezone_from_cookie
+      @timezone_from_cookie ||= begin
+        timezone = cookies[:timezone]
+        ActiveSupport::TimeZone[timezone] if timezone.present?
+      end
+    end
+end
+```
+
+Key patterns:
+- `around_action` wraps the entire request in the user's timezone
+- `etag` includes timezone - different timezones get different cached responses
+- Cookie is set client-side by JavaScript detecting the user's timezone
+
+### SetPlatform Concern
+
+Detect mobile/desktop platform:
+
+```ruby
+module SetPlatform
+  extend ActiveSupport::Concern
+
+  included do
+    helper_method :platform
+  end
+
+  private
+    def platform
+      @platform ||= ApplicationPlatform.new(request.user_agent)
+    end
+end
+```
+
+Usage in views:
+
+```erb
+<% if platform.mobile? %>
+  <%= render "mobile_nav" %>
+<% else %>
+  <%= render "desktop_nav" %>
+<% end %>
+```
+
+### FilterScoped Concern
+
+Complex filtering with persisted filters:
+
+```ruby
+module FilterScoped
+  extend ActiveSupport::Concern
+
+  included do
+    before_action :set_filter
+    before_action :set_user_filtering
+  end
+
+  private
+    def set_filter
+      if params[:filter_id].present?
+        @filter = Current.user.filters.find(params[:filter_id])
+      else
+        @filter = Current.user.filters.from_params(filter_params)
+      end
+    end
+
+    def filter_params
+      params.reverse_merge(**Filter.default_values)
+            .permit(*Filter::PERMITTED_PARAMS)
+    end
+
+    def set_user_filtering
+      @user_filtering = User::Filtering.new(Current.user, @filter, expanded: expanded_param)
+    end
+end
+```
+
+### BlockSearchEngineIndexing Concern
+
+Prevent crawling of private content:
+
+```ruby
+module BlockSearchEngineIndexing
+  extend ActiveSupport::Concern
+
+  included do
+    after_action :block_search_engine_indexing
+  end
+
+  private
+    def block_search_engine_indexing
+      headers["X-Robots-Tag"] = "none"
+    end
+end
+```
+
+### RequestForgeryProtection Concern
+
+Modern CSRF using `Sec-Fetch-Site` header:
+
+```ruby
+module RequestForgeryProtection
+  extend ActiveSupport::Concern
+
+  included do
+    after_action :append_sec_fetch_site_to_vary_header
+  end
+
+  private
+    def append_sec_fetch_site_to_vary_header
+      vary_header = response.headers["Vary"].to_s.split(",").map(&:strip).reject(&:blank?)
+      response.headers["Vary"] = (vary_header + ["Sec-Fetch-Site"]).join(",")
+    end
+
+    def verified_request?
+      request.get? || request.head? || !protect_against_forgery? ||
+        (valid_request_origin? && safe_fetch_site?)
+    end
+
+    SAFE_FETCH_SITES = %w[same-origin same-site]
+
+    def safe_fetch_site?
+      SAFE_FETCH_SITES.include?(sec_fetch_site_value) ||
+        (sec_fetch_site_value.nil? && api_request?)
+    end
+
+    def api_request?
+      request.format.json?
+    end
+end
+```
+
+### ViewTransitions Concern
+
+Disable view transitions on page refresh:
+
+```ruby
+module ViewTransitions
+  extend ActiveSupport::Concern
+
+  included do
+    before_action :disable_view_transitions, if: :page_refresh?
+  end
+
+  private
+    def disable_view_transitions
+      @disable_view_transition = true
+    end
+
+    def page_refresh?
+      request.referrer.present? && request.referrer == request.url
+    end
 end
 ```
 
@@ -443,3 +631,41 @@ For routes outside account scope:
 ```ruby
 redirect_to session_menu_url(script_name: nil)  # Generates /session/menu
 ```
+
+## Concern Composition Rules
+
+1. **Concerns can include other concerns:**
+   ```ruby
+   module DayTimelinesScoped
+     include FilterScoped  # Inherits all of FilterScoped
+     # ...
+   end
+   ```
+
+2. **Use `before_action` in `included` block:**
+   ```ruby
+   included do
+     before_action :set_card
+   end
+   ```
+
+3. **Provide shared private methods:**
+   ```ruby
+   def render_card_replacement
+     # Reusable across all CardScoped controllers
+   end
+   ```
+
+4. **Use `helper_method` for view access:**
+   ```ruby
+   included do
+     helper_method :platform, :timezone_from_cookie
+   end
+   ```
+
+5. **Add to `etag` for HTTP caching:**
+   ```ruby
+   included do
+     etag { timezone_from_cookie }
+   end
+   ```

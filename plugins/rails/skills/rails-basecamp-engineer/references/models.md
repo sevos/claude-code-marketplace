@@ -157,7 +157,16 @@ normalizes :subscribed_actions, with: ->(value) {
 }
 ```
 
-## Callbacks
+## Callbacks (Used Sparingly)
+
+Callbacks are used but not overused - prefer explicit method calls over implicit callbacks.
+
+### What to Avoid
+
+- No complex callback chains
+- No `before_validation` for business logic
+- No callbacks that call external services synchronously
+- Prefer explicit method calls over implicit callbacks
 
 ### Organize in Concerns
 
@@ -175,12 +184,20 @@ module Card::Statuses
 end
 ```
 
-### Use after_create_commit for Side Effects
+### Use after_create_commit for Async Work
 
 ```ruby
 after_create_commit :notify_recipients_later
 after_create_commit :dispatch_webhooks
+after_commit :relay_later, on: :create
 after_save_commit -> { cards.touch_all }, if: :saved_change_to_name?
+```
+
+### Before Save for Derived Data
+
+```ruby
+before_save :set_defaults
+before_save :calculate_position
 ```
 
 ### Inline Lambdas for Simple Callbacks
@@ -191,6 +208,33 @@ after_touch  -> { board.touch }, if: :published?
 ```
 
 ## Scopes
+
+### Naming Conventions
+
+**Ordering scopes** - use adverbs:
+
+```ruby
+scope :chronologically,         -> { order created_at: :asc }
+scope :reverse_chronologically, -> { order created_at: :desc }
+scope :alphabetically,          -> { order name: :asc }
+scope :latest,                  -> { order last_active_at: :desc }
+```
+
+**Preloading scopes** - use `preloaded` as standard name:
+
+```ruby
+scope :with_users, -> {
+  preload(creator: [:avatar_attachment, :account],
+          assignees: [:avatar_attachment, :account])
+}
+
+scope :preloaded, -> {
+  with_users
+    .preload(:column, :tags, :steps, :closure,
+             board: [:entropy, :columns])
+    .with_rich_text_description_and_embeds
+}
+```
 
 ### Simple Scopes
 

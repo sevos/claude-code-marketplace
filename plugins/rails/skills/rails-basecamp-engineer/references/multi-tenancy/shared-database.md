@@ -1,19 +1,36 @@
-# Multi-Tenancy Patterns
+# Shared Database, Shared Schema Multi-Tenancy
 
-This document covers two approaches to multi-tenancy:
-1. **URL Path-Based** (shared database) - Fizzy/Basecamp pattern
-2. **Subdomain-Based** (database per tenant) - Using activerecord-tenanted gem
+This pattern uses a single shared database with all tenants sharing the same tables. Tenant isolation is achieved via `account_id` filtering on every query.
 
-## Approach 1: URL Path-Based Multi-Tenancy
+**Also known as:** Row-level multi-tenancy, tenant_id filtering
 
-### Overview
+**Used by:** Fizzy, Basecamp, HEY (37signals)
 
-- Single shared database with `account_id` on all tenant tables
-- Account ID extracted from URL path: `/{account_id}/boards/...`
-- Middleware moves slug to `SCRIPT_NAME`, making Rails think it's "mounted" at that path
-- All queries filtered by `account_id`
+## When to Use
+
+- Most SaaS applications (recommended default)
+- Simpler ops: one database to backup, migrate, monitor
+- Cost-effective: single database instance
+- Cross-tenant queries needed (analytics, admin dashboards)
+
+## Trade-offs
+
+**Pros:**
+- Single schema to maintain
+- Simpler deployment and migrations
+- Lower infrastructure costs
+- Easy cross-tenant operations
+
+**Cons:**
+- Risk of data leakage if WHERE clause missed
+- "Noisy neighbor" potential (one tenant's load affects others)
+- Tenant-specific customizations are harder
+
+## Implementation
 
 ### Account Slug Middleware
+
+Extract account from URL path (`/{account_id}/boards/...`):
 
 ```ruby
 # config/initializers/tenanting/account_slug.rb
@@ -84,7 +101,7 @@ end
 
 ### Model Scoping via Defaults
 
-All models derive `account_id` from associations:
+All models derive `account_id` from associations - no explicit filtering needed:
 
 ```ruby
 class Board < ApplicationRecord
@@ -220,195 +237,7 @@ Rails.application.config.after_initialize do
 end
 ```
 
----
-
-## Approach 2: Subdomain-Based Multi-Tenancy
-
-### Overview
-
-- Uses `activerecord-tenanted` gem
-- Each tenant has its own database
-- Tenant identified by subdomain
-- Automatic query scoping via model inheritance
-
-### Setup
-
-```ruby
-# Gemfile
-gem "activerecord-tenanted", "~> 0.5.0"
-```
-
-### Configuration
-
-```ruby
-# config/initializers/tenancy.rb
-Rails.application.configure do
-  config.active_record_tenanted.tenant_resolver = ->(request) {
-    TenantNameValidator.resolve(request.subdomain)
-  }
-  config.active_record_tenanted.default_tenant = Rails.env.local? ? "dev" : nil
-  config.active_record_tenanted.connection_class = "AccountRecord"
-end
-```
-
-### Database Configuration
-
-```yaml
-# config/database.yml
-default: &default
-  adapter: sqlite3
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  timeout: 5000
-
-development:
-  primary:
-    <<: *default
-    database: storage/development/primary.sqlite3
-  account:
-    <<: *default
-    database: storage/development/account/%{tenant_id}.sqlite3
-    migrations_paths: db/account_migrate
-```
-
-### Base Models
-
-```ruby
-# app/models/application_record.rb
-class ApplicationRecord < ActiveRecord::Base
-  primary_abstract_class
-  # For shared/global data
-end
-
-# app/models/account_record.rb
-class AccountRecord < ActiveRecord::Base
-  self.abstract_class = true
-  tenanted "account"  # Specifies tenant database
-end
-```
-
-### Account Model with Database Lifecycle
-
-```ruby
-class Account < ApplicationRecord
-  include WithDatabase
-
-  validates :tenant_id, presence: true, uniqueness: true,
-            format: { with: /\A[a-z0-9-]+\z/ }
-end
-
-module Account::WithDatabase
-  extend ActiveSupport::Concern
-
-  included do
-    after_create :create_tenant_database
-    after_destroy :destroy_tenant_database
-  end
-
-  private
-    def create_tenant_database
-      AccountRecord.create_tenant(tenant_id)
-    end
-
-    def destroy_tenant_database
-      AccountRecord.destroy_tenant(tenant_id)
-    end
-end
-```
-
-### Tenant Models
-
-```ruby
-class User < AccountRecord
-  # Automatically scoped to current tenant database
-end
-
-class Reflection < AccountRecord
-  belongs_to :user
-end
-```
-
-### Current Context
-
-```ruby
-class Current < ActiveSupport::CurrentAttributes
-  attribute :session, :account
-
-  delegate :user, to: :session, allow_nil: true
-
-  def account
-    super || self.account = Account.find_by(tenant_id: AccountRecord.current_tenant)
-  end
-end
-```
-
-### Controller Concern
-
-```ruby
-module Tenancy
-  extend ActiveSupport::Concern
-
-  included do
-    helper_method :current_tenant
-  end
-
-  def current_tenant
-    AccountRecord.current_tenant
-  end
-end
-```
-
-### Background Jobs
-
-Jobs must manually pass and restore tenant context:
-
-```ruby
-class UpdateStateJob < ApplicationJob
-  def perform(tenant_id, user_id)
-    AccountRecord.with_tenant(tenant_id) do
-      user = User.find(user_id)
-      user.update_state
-    end
-  end
-end
-
-# Enqueuing
-UpdateStateJob.perform_later(AccountRecord.current_tenant, user.id)
-```
-
-### ActionCable
-
-```ruby
-module ApplicationCable
-  class Connection < ActiveRecord::Tenanted::CableConnection::Base
-    identified_by :current_user
-
-    def connect
-      AccountRecord.with_tenant(tenant_id) do
-        self.current_user = find_verified_user
-      end
-    end
-  end
-end
-```
-
----
-
-## Comparison
-
-| Aspect | URL Path-Based | Subdomain-Based |
-|--------|----------------|-----------------|
-| Database | Shared, account_id filtering | Separate per tenant |
-| Isolation | Row-level | Database-level |
-| Query Scoping | Manual (default lambdas) | Automatic (inheritance) |
-| Job Context | Automatic (extensions) | Manual (parameter) |
-| Gem | None (custom) | activerecord-tenanted |
-| URL Format | `/123456/boards` | `tenant.app.com/boards` |
-| Scaling | Horizontal (row filtering) | Horizontal (database sharding) |
-| Dev Setup | Simple (one database) | Complex (manage N databases) |
-
-## Testing Multi-Tenancy
-
-### URL Path-Based
+## Testing
 
 ```ruby
 class ActionDispatch::IntegrationTest
@@ -424,19 +253,5 @@ def untenanted(&block)
   yield
 ensure
   integration_session.default_url_options[:script_name] = original
-end
-```
-
-### Subdomain-Based
-
-```ruby
-class ActionDispatch::IntegrationTest
-  setup do
-    host! "dev.app.localhost"
-  end
-end
-
-def with_tenant(tenant_id, &block)
-  AccountRecord.with_tenant(tenant_id, &block)
 end
 ```
