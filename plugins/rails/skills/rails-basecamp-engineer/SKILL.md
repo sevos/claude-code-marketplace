@@ -86,6 +86,7 @@ Load the appropriate reference when implementing specific patterns or domains:
 
 ### Frontend & Hotwire
 - `references/hotwire.md` - Turbo Frames, Turbo Streams overview
+- `references/confirmation-dialogs.md` - Native dialog confirmations with Turbo integration
 - `references/stimulus/index.md` - Stimulus controller decision table
   - `stimulus/utility-controllers.md` - copy-to-clipboard, hotkey, toggle-class, beacon
   - `stimulus/form-controllers.md` - auto-submit, autoresize, local-save
@@ -119,6 +120,7 @@ Load the appropriate reference when implementing specific patterns or domains:
 | Implementing permissions/roles | `authorization.md` |
 | Multi-account/tenant support | Detect existing approach → `multi-tenancy/*.md` |
 | Real-time UI updates (Turbo) | `hotwire.md` |
+| Confirmation dialogs for destructive actions | `confirmation-dialogs.md` |
 | Stimulus controllers | `stimulus/index.md` (decision table) |
 | CSS styling | Detect existing approach → `frontend/*.md` |
 | Background processing | `background-jobs.md` |
