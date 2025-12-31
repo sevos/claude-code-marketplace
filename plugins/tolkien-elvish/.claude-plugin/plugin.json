@@ -1,0 +1,8 @@
+{
+  "name": "tolkien-elvish",
+  "version": "0.1.0",
+  "description": "Tools and knowledge for working with Elvish languages created by J.R.R. Tolkien",
+  "author": {
+    "name": "sevos"
+  }
+}
