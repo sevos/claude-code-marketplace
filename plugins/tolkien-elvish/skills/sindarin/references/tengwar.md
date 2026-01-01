@@ -11,14 +11,30 @@ Tengwar is **NOT in official Unicode**. The Tolkien Estate has declined to permi
 
 ## Available Fonts
 
-### Recommended Fonts
+### Bundled Font: Tengwar Annatar
 
-| Font | License | CDN Available | Notes |
-|------|---------|---------------|-------|
-| **Tengwar Annatar** | Freeware | Yes (CDNFonts) | Most popular, multiple variants |
-| **Alcarin Tengwar** | SIL OFL 1.1 | No | High-quality, academic design |
-| **Tengwar Formal CSUR** | SIL OFL 1.1 | No | CSUR-compatible |
-| **FreeMonoTengwar** | GPL v3 | No | Monospace variant |
+This skill includes the **Tengwar Annatar** font family in the `fonts/` directory:
+
+| File | Variant |
+|------|---------|
+| `tngan.ttf` | Regular |
+| `tnganb.ttf` | Bold |
+| `tngani.ttf` | Italic |
+| `tnganbi.ttf` | Bold Italic |
+| `tngana.ttf` | Alt Regular |
+| `tnganab.ttf` | Alt Bold |
+| `tnganai.ttf` | Alt Italic |
+| `tnganabi.ttf` | Alt Bold Italic |
+
+**License**: Freeware by Johan Winge (see `fonts/LICENCE`). Free for non-commercial use; commercial use requires providing a free copy to the creator.
+
+### Other Fonts
+
+| Font | License | Notes |
+|------|---------|-------|
+| **Alcarin Tengwar** | SIL OFL 1.1 | High-quality, academic design |
+| **Tengwar Formal CSUR** | SIL OFL 1.1 | CSUR-compatible |
+| **FreeMonoTengwar** | GPL v3 | Monospace variant |
 
 ### CDN Usage
 
