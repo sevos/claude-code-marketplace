@@ -63,6 +63,29 @@ To provide Sindarin assistance:
 4. Apply appropriate mutations based on context
 5. Provide pronunciation guidance when relevant
 
+## Tengwar Script
+
+Sindarin can be written in Latin script or in Tengwar, Tolkien's Elvish writing system. For displaying Tengwar:
+
+### Quick Reference
+
+- **CDN Font**: `https://fonts.cdnfonts.com/css/tengwar-annatar`
+- **Transcription**: Use TengwarJS (`tengwar` npm package) or Tecendil
+- **Inline SVG**: For environments without font loading (like Claude web)
+
+### Rendering Options
+
+1. **For HTML pages**: Link CDN font + use TengwarJS for transcription
+2. **For Claude/inline**: Pre-render as SVG using `scripts/render-tengwar.js`
+3. **Self-contained**: Embed font as base64 in HTML
+
+### Resources
+
+- **`references/tengwar.md`** - Complete Tengwar rendering guide
+- **`scripts/render-tengwar.js`** - Node.js script for SVG generation
+- **`templates/tengwar-page.html`** - HTML template with CDN fonts
+- **`templates/tengwar-inline-svg.html`** - Self-contained SVG approach
+
 ## Additional Resources
 
 ### Reference Files
@@ -70,6 +93,7 @@ To provide Sindarin assistance:
 For detailed linguistic information, consult:
 - **`references/grammar.md`** - Complete Sindarin grammar rules, mutations, and syntax
 - **`references/vocabulary.md`** - English-Sindarin and Sindarin-English vocabulary
+- **`references/tengwar.md`** - Tengwar script rendering for web
 
 ### Limitations
 

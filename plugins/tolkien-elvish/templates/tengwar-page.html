@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tengwar Display</title>
+
+  <!-- Tengwar Font from CDN -->
+  <link href="https://fonts.cdnfonts.com/css/tengwar-annatar" rel="stylesheet">
+
+  <style>
+    :root {
+      --text-color: #2c3e50;
+      --bg-color: #fefefe;
+      --accent-color: #8b4513;
+      --border-color: #ddd;
+      --tengwar-size: 2.5em;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --text-color: #ecf0f1;
+        --bg-color: #1a1a2e;
+        --accent-color: #d4a574;
+        --border-color: #444;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 2rem;
+      min-height: 100vh;
+      line-height: 1.8;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--accent-color);
+      font-weight: normal;
+      letter-spacing: 0.1em;
+      margin-bottom: 2rem;
+    }
+
+    /* Tengwar text styling */
+    .tengwar {
+      font-family: 'Tengwar Annatar', serif;
+      font-size: var(--tengwar-size);
+      line-height: 1.4;
+      letter-spacing: 0.05em;
+    }
+
+    .tengwar-block {
+      text-align: center;
+      padding: 2rem;
+      margin: 1.5rem 0;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(139, 69, 19, 0.05), transparent);
+    }
+
+    .tengwar-inline {
+      display: inline;
+      font-size: 1.3em;
+      vertical-align: baseline;
+    }
+
+    /* Translation/transcription display */
+    .translation {
+      font-style: italic;
+      color: var(--accent-color);
+      text-align: center;
+      margin-top: 0.5rem;
+      font-size: 0.9em;
+    }
+
+    .pronunciation {
+      font-size: 0.8em;
+      color: #888;
+      text-align: center;
+      margin-top: 0.25rem;
+    }
+
+    /* Interactive input section */
+    .input-section {
+      margin: 2rem 0;
+      padding: 1.5rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+    }
+
+    .input-section label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+
+    .input-section input[type="text"] {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-family: inherit;
+    }
+
+    .input-section select {
+      padding: 0.5rem;
+      margin-left: 1rem;
+      font-size: 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+    }
+
+    #output {
+      margin-top: 1rem;
+      padding: 1rem;
+      min-height: 3rem;
+      border: 1px dashed var(--border-color);
+      border-radius: 4px;
+      text-align: center;
+    }
+
+    /* Decorative elements */
+    .divider {
+      text-align: center;
+      margin: 2rem 0;
+      color: var(--accent-color);
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '~~~';
+      margin: 0 1rem;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 3rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+      font-size: 0.85em;
+      color: #888;
+    }
+
+    footer a {
+      color: var(--accent-color);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Tengwar Script Display</h1>
+
+    <!-- Example: Block display -->
+    <div class="tengwar-block">
+      <p class="tengwar" data-tengwar="Mae govannen, mellon">
+        <!-- TengwarJS will populate this, or use pre-transcribed text -->
+        lEw xÉzE5. lj°^5
+      </p>
+      <p class="translation">"Well met, friend" (Sindarin)</p>
+      <p class="pronunciation">[mae govannen, mellon]</p>
+    </div>
+
+    <p class="divider"></p>
+
+    <!-- Example: Inline usage -->
+    <p>
+      In Sindarin, the word for "star" is
+      <span class="tengwar tengwar-inline" data-tengwar="elenath">j°`N</span>
+      (elenath, collective plural).
+    </p>
+
+    <p class="divider"></p>
+
+    <!-- Interactive transcription (requires TengwarJS) -->
+    <div class="input-section">
+      <label for="latin-input">Enter text to transcribe:</label>
+      <div style="display: flex; align-items: center; gap: 1rem; margin-top: 0.5rem;">
+        <input type="text" id="latin-input" placeholder="mae govannen" value="mae govannen">
+        <select id="mode-select">
+          <option value="general-use">General Use (Sindarin)</option>
+          <option value="classical">Classical (Quenya)</option>
+        </select>
+      </div>
+      <div id="output" class="tengwar"></div>
+    </div>
+
+    <p class="divider"></p>
+
+    <!-- More examples -->
+    <div class="tengwar-block">
+      <p class="tengwar" data-tengwar="Elen sila lumenn omentielvo">
+        j°`V6 8~B°j~E °jlR5. `NlR6G`Vj°zH
+      </p>
+      <p class="translation">"A star shines on the hour of our meeting" (Quenya)</p>
+    </div>
+
+    <footer>
+      <p>
+        Tengwar script created by J.R.R. Tolkien.
+        Font: <a href="https://www.dafont.com/tengwar-annatar.font">Tengwar Annatar</a> by Johan Winge.
+      </p>
+      <p>
+        For transcription tools, visit <a href="https://www.tecendil.com/">Tecendil</a>.
+      </p>
+    </footer>
+  </div>
+
+  <!-- Optional: TengwarJS for automatic transcription -->
+  <!--
+  <script src="https://cdn.jsdelivr.net/npm/tengwar@1.2.6/tengwar.min.js"></script>
+  <script>
+    // TengwarJS auto-transcribes elements with data-tengwar attribute
+    // Manual transcription for the input field:
+    const input = document.getElementById('latin-input');
+    const output = document.getElementById('output');
+    const modeSelect = document.getElementById('mode-select');
+
+    function updateOutput() {
+      const text = input.value;
+      const mode = modeSelect.value;
+      // Note: TengwarJS needs to be loaded for this to work
+      if (window.Tengwar) {
+        output.textContent = Tengwar.transcribe(text, mode);
+      }
+    }
+
+    input.addEventListener('input', updateOutput);
+    modeSelect.addEventListener('change', updateOutput);
+    updateOutput();
+  </script>
+  -->
+
+  <!-- Fallback: Manual transcription example without TengwarJS -->
+  <script>
+    // Simple demo without TengwarJS
+    // In production, use TengwarJS for proper transcription
+    const input = document.getElementById('latin-input');
+    const output = document.getElementById('output');
+
+    function demo() {
+      // This is just a placeholder - real transcription needs TengwarJS
+      output.textContent = '(Install TengwarJS for live transcription)';
+      output.style.fontFamily = "'Tengwar Annatar', serif";
+    }
+
+    input.addEventListener('input', demo);
+    demo();
+  </script>
+</body>
+</html>

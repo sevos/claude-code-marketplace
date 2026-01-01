@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tengwar - Inline SVG Method</title>
+  <style>
+    :root {
+      --text-color: #2c3e50;
+      --bg-color: #fefefe;
+      --accent-color: #8b4513;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --text-color: #ecf0f1;
+        --bg-color: #1a1a2e;
+        --accent-color: #d4a574;
+      }
+    }
+
+    body {
+      font-family: 'Palatino Linotype', Georgia, serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem;
+      line-height: 1.8;
+    }
+
+    h1, h2 {
+      color: var(--accent-color);
+      font-weight: normal;
+    }
+
+    .tengwar-svg {
+      display: inline-block;
+      height: 1.5em;
+      vertical-align: middle;
+    }
+
+    .tengwar-svg path {
+      fill: currentColor;
+    }
+
+    .tengwar-block-svg {
+      display: block;
+      height: 3em;
+      margin: 1rem auto;
+    }
+
+    .example-box {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      text-align: center;
+    }
+
+    .translation {
+      font-style: italic;
+      color: var(--accent-color);
+      margin-top: 0.5rem;
+    }
+
+    code {
+      background: #f4f4f4;
+      padding: 0.2em 0.4em;
+      border-radius: 3px;
+      font-size: 0.9em;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      code {
+        background: #2d2d44;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Tengwar Rendering with Inline SVG</h1>
+
+  <p>
+    This method uses pre-rendered SVG paths, making it work anywhere without external fonts.
+    Perfect for Claude's web interface or any environment where fonts can't be loaded.
+  </p>
+
+  <h2>Inline Example</h2>
+  <p>
+    The Sindarin greeting
+    <!-- "Mae govannen" rendered as inline SVG -->
+    <svg class="tengwar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 60">
+      <path d="M5,45 L5,15 L15,15 L15,25 L25,25 L25,15 L35,15 L35,45 L25,45 L25,35 L15,35 L15,45 Z M45,45 L45,15 L75,15 L75,25 L55,25 L55,27 L75,27 L75,45 L45,45 Z M55,35 L55,37 L65,37 L65,35 Z M85,45 L85,15 L115,15 L115,25 L95,25 L95,35 L115,35 L115,45 Z" fill="currentColor"/>
+      <!-- Note: This is placeholder path data. Real paths would come from text-to-svg -->
+    </svg>
+    means "well met" in the Grey-elven tongue.
+  </p>
+
+  <h2>Block Example</h2>
+  <div class="example-box">
+    <!-- "Elen sila lumenn omentielvo" as block SVG -->
+    <svg class="tengwar-block-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 80">
+      <path d="M10,60 L10,20 L30,20 L30,30 L50,30 L50,20 L70,20 L70,60 Z M80,60 L80,20 L100,20 L100,60 Z M110,60 L110,20 L150,20 L150,30 L130,30 L130,45 L150,45 L150,60 Z" fill="currentColor"/>
+      <!-- Placeholder path - generate real paths with render-tengwar.js -->
+    </svg>
+    <p class="translation">"A star shines on the hour of our meeting"</p>
+  </div>
+
+  <h2>How It Works</h2>
+  <ol>
+    <li>Use <code>render-tengwar.js --format inline</code> to generate SVG paths</li>
+    <li>Copy the generated <code>&lt;svg&gt;</code> element into your HTML</li>
+    <li>The SVG uses <code>fill="currentColor"</code> to inherit text color</li>
+    <li>Height is controlled by CSS, viewBox handles scaling</li>
+  </ol>
+
+  <h2>Generating Real SVG Paths</h2>
+  <pre><code># Install dependencies
+npm install text-to-svg tengwar
+
+# Generate inline SVG
+node render-tengwar.js "mae govannen" --format inline --font /path/to/tengwar.ttf
+
+# Output goes to stdout, copy into HTML</code></pre>
+
+  <h2>Advantages</h2>
+  <ul>
+    <li><strong>No external dependencies</strong> - works offline, in any browser</li>
+    <li><strong>Perfect scaling</strong> - vector graphics at any size</li>
+    <li><strong>Theme compatible</strong> - inherits text color automatically</li>
+    <li><strong>Works in Claude</strong> - renders in web interface without font loading</li>
+  </ul>
+
+  <h2>Limitations</h2>
+  <ul>
+    <li>Requires pre-rendering (can't transcribe on the fly)</li>
+    <li>Larger file size than text with fonts</li>
+    <li>Must regenerate SVG for each unique text</li>
+  </ul>
+</body>
+</html>
