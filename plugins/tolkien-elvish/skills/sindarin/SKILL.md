@@ -1,7 +1,6 @@
 ---
-name: Sindarin Language
+name: sindarin-language
 description: This skill should be used when the user asks to "translate to Sindarin", "write in Elvish", "Sindarin grammar", "Elvish translation", "speak Sindarin", "Tolkien Elvish", or mentions Sindarin language, Grey-elven, or needs help with Elvish linguistics from Tolkien's legendarium.
-version: 0.1.0
 ---
 
 # Sindarin Language Skill
