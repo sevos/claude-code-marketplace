@@ -1,7 +1,7 @@
 {
   "name": "tolkien-elvish",
-  "version": "0.1.0",
-  "description": "Tools and knowledge for working with Elvish languages created by J.R.R. Tolkien",
+  "version": "0.2.0",
+  "description": "Tools and knowledge for working with Elvish languages created by J.R.R. Tolkien, including Tengwar script rendering",
   "author": {
     "name": "sevos"
   }
