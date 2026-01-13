@@ -40,6 +40,24 @@
       "author": {
         "name": "sevos"
       }
+    },
+    {
+      "name": "temporary-upload",
+      "source": "./plugins/temporary-upload",
+      "description": "Upload files to paste.sevos.io for temporary sharing with configurable expiry",
+      "version": "1.0.0",
+      "author": {
+        "name": "Artur Roszczyk"
+      }
+    },
+    {
+      "name": "video-transcript-downloader",
+      "source": "./plugins/video-transcript-downloader",
+      "description": "Download videos, audio, subtitles, and transcripts from YouTube and yt-dlp supported sites",
+      "version": "1.0.0",
+      "author": {
+        "name": "Artur Roszczyk"
+      }
     }
   ]
 }

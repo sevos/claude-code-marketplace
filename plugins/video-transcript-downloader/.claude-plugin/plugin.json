@@ -1,0 +1,5 @@
+{
+  "name": "video-transcript-downloader",
+  "version": "1.0.0",
+  "description": "Download videos, audio, subtitles, and transcripts from YouTube and yt-dlp supported sites"
+}

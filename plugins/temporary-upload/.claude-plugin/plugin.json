@@ -1,0 +1,5 @@
+{
+  "name": "temporary-upload",
+  "version": "1.0.0",
+  "description": "Upload files to paste.sevos.io for temporary sharing with configurable expiry"
+}
